@@ -1,6 +1,6 @@
 package apb_pkg;
 
-parameter ADDR_WIDTH = 32; // 2^32 = 4gb
+parameter ADDR_WIDTH = 32;
 parameter DATA_WIDTH = 32;
 
 typedef logic [ADDR_WIDTH-1:0] addr_t;
@@ -10,6 +10,6 @@ typedef enum bit [1:0] {
     IDLE,
     SETUP,
     ACCESS
-} apb_operation_states;
+} apb_opn_states_t;
 
 endpackage

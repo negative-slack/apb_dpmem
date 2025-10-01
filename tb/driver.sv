@@ -1,4 +1,4 @@
-import apb_pkg::*;
+// import apb_pkg::*;
 
 class driver;
 
@@ -11,14 +11,17 @@ class driver;
     this.gen2dri_mbx = gen2dri_mbx;
   endfunction
 
+  // cycle_start
+  task cycle_start;
+    @(posedge vif.master_dv.PCLK);
+  endtask : cycle_start
+
   task main();
     forever begin
       gen2dri_mbx.get(trans);
       if (trans.PWRITE == 1) begin
-        @(posedge vif.master_dv.PCLK);
         apb_write(trans.PADDR, trans.PWRITE, trans.PWDATA);
       end else begin
-        @(posedge vif.master.PCLK);
         apb_read(trans.PADDR);
       end
       trans.display("DRIVER");
@@ -27,15 +30,14 @@ class driver;
   endtask : main
 
   task apb_write(addr_t paddr, bit pwrite, data_t pwdata);
-    // cc 1
+    cycle_start();
     vif.master.PADDR <= paddr;
     vif.master.PWRITE <= 1;
     vif.master.PSEL <= 1;
     vif.master.PENABLE <= 0;
     vif.master.PWDATA <= pwdata;
 
-    //cc 2
-    @(posedge vif.master.PCLK);
+    cycle_start();
     vif.master.PADDR <= paddr;
     vif.master.PWRITE <= 1;
     vif.master.PSEL <= 1;
@@ -48,12 +50,13 @@ class driver;
   endtask
 
   task apb_read(addr_t paddr);
+    cycle_start();
     vif.master.PADDR <= paddr;
     vif.master.PWRITE <= 0;
     vif.master.PSEL <= 1;
     vif.master.PENABLE <= 0;
 
-    @(posedge vif.master.PCLK);
+    cycle_start();
     vif.master.PADDR <= paddr;
     vif.master.PWRITE <= 0;
     vif.master.PSEL <= 1;
@@ -63,6 +66,5 @@ class driver;
     vif.master.PSEL <= 0;
     vif.master.PENABLE <= 0;
   endtask
-
 
 endclass : driver

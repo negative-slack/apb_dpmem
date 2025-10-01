@@ -1,3 +1,5 @@
+import apb_pkg::*;
+
 class scoreboard;
 
   mailbox mon2scb_mbx;

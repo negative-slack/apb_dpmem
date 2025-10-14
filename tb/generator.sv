@@ -15,9 +15,10 @@ class generator;
       trans.randomize();
       $display("t=%0t [Generator] Loop:%0d/%0d create next transaction", $time, i + 1, num_trans);
       gen2dri_mbx.put(trans);
+      trans.display("Generator");
     end
     $display("t = %0t [Generator] Done generation of %0d items", $time, num_trans);
-    trans.display("Generator");
+    // trans.display("Generator");
     ->ended;
   endtask : main
 

@@ -14,13 +14,13 @@ interface apb_if (
   logic  PREADY;
 
   clocking master_cb @(posedge PCLK);
-    default input #1step output #1ns;
+    default input #1ns output #1ns;
     input PRDATA, PREADY;
     output PADDR, PWRITE, PSEL, PENABLE, PWDATA;
   endclocking
 
   clocking slave_cb @(posedge PCLK);
-    default input #1step output #1ns;
+    default input #1ns output #1ns;
     input PADDR, PWRITE, PSEL, PENABLE, PWDATA;
     output PRDATA, PREADY;
   endclocking

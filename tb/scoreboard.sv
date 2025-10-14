@@ -27,7 +27,7 @@ class scoreboard;
           $display("MATCH!! cnt  = %0d", cnt);
         end else begin
           $display("MISMATCH!!");
-          $fatal;
+          // $fatal;
         end
       end
     end

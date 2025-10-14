@@ -1,6 +1,6 @@
 package apb_pkg;
 
-parameter ADDR_WIDTH = 32;
+parameter ADDR_WIDTH = 10;
 parameter DATA_WIDTH = 32;
 
 typedef logic [ADDR_WIDTH-1:0] addr_t;

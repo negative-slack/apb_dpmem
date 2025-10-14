@@ -1,4 +1,4 @@
-// import apb_pkg::*;
+import apb_pkg::*;
 
 class driver;
 
@@ -26,7 +26,6 @@ class driver;
       end
       trans.display("DRIVER");
     end
-
   endtask : main
 
   task apb_write(addr_t paddr, bit pwrite, data_t pwdata);

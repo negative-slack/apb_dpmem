@@ -2,24 +2,17 @@ import apb_pkg::*;
 
 class transaction;
 
-  rand addr_t PADDR;
-  rand bit    PWRITE;
-  bit         PSEL;
-  bit         PENABLE;
-  rand data_t PWDATA;
+  rand apb_req_t req;
+  apb_rsp_t rsp;
 
-  data_t      PRDATA;
-  bit         PREADY;
+  constraint c1 {req.paddr < 3;}
 
   function void display(string module_name);
     $display("-------------------------");
     $display("- %s ", module_name);
     $display("-------------------------");
-    // $display("t=%0t, PADDR=%0h, PWRITE=%0b, PWDATA=%0h", $time, PADDR, PWRITE, PWDATA);
-    $display(
-        "t=%0t, PADDR=%0d, PWRITE=%0b, PSEL=%0b, PENABLE=%0b, PWDATA=%0h, PRDATA=%0h, PREADY=%0b",
-        $time, PADDR, PWRITE, PSEL, PENABLE, PWDATA, PRDATA, PREADY);
-
+    $display("t=%0t, PADDR=%0h, PWRITE=%0b, PWDATA=%0h",  /////
+             $time, req.paddr, req.pwrite, req.pwdata);
   endfunction : display
 
 endclass : transaction

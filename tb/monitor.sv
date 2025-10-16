@@ -1,68 +1,37 @@
+import apb_pkg::*;
+
 class monitor;
 
-  virtual apb_if vif;
+  virtual apb_if monitor_vif;
 
   mailbox mon2scb_mbx;
 
-  function new(virtual apb_if vif, mailbox mon2scb_mbx);
-    this.vif = vif;
+  function new(virtual apb_if monitor_vif, mailbox mon2scb_mbx);
+    this.monitor_vif = monitor_vif;
     this.mon2scb_mbx = mon2scb_mbx;
   endfunction
 
   task main();
-
-    bit [31:0] addr_temp;
-    bit [31:0] wdata_temp;
-
     transaction trans;
-    trans = new();
-
     forever begin
+      @(posedge monitor_vif.PCLK);
 
-      @(posedge vif.slave.PCLK);
-      while (vif.slave.PSEL == 0) begin
-        @(posedge vif.slave.PCLK);
+      if (monitor_vif.PSEL && monitor_vif.PENABLE && monitor_vif.PREADY) begin
+        trans = new();
 
-        if (vif.slave.PWRITE) begin
-          addr_temp  = vif.slave.PADDR;
-          wdata_temp = vif.slave.PWDATA;
-          @(posedge vif.slave.PCLK);
-          assert (vif.slave.PENABLE == 1);
-
-          while (vif.slave.PREADY == 0) begin
-            assert (vif.slave.PENABLE == 1);
-            assert (vif.slave.PWRITE == 1);
-            assert (addr_temp == vif.slave.PADDR);
-            assert (wdata_temp == vif.slave.PWDATA);
-          end
-
-          trans.PSEL   = 1;
-          trans.PADDR  = vif.slave.PADDR;
-          trans.PWDATA = vif.slave.PWDATA;
-        end 
-        
-        else begin
-          addr_temp = vif.slave.PADDR;
-          @(posedge vif.slave.PCLK);
-          assert (vif.slave.PENABLE == 1);
-
-          while (vif.slave.PREADY == 0) begin
-            assert (vif.slave.PENABLE == 1);
-            assert (vif.slave.PWRITE == 0);
-            assert (addr_temp == vif.slave.PADDR);
-            @(posedge vif.slave.PCLK);
-          end
-
-          trans.PSEL   = 0;
-          trans.PADDR  = vif.slave.PADDR;
-          trans.PWDATA = vif.slave.PWDATA;
+        trans.req.paddr = apb_rw_t'(monitor_vif.PADDR);
+        trans.req.pwrite = apb_rw_t'(monitor_vif.PWRITE);
+        if (trans.req.pwrite) begin
+          trans.req.pwdata = monitor_vif.PWDATA;
+        end else begin
+          trans.rsp.prdata = monitor_vif.PRDATA;
         end
+        trans.rsp.pready = monitor_vif.PREADY;
 
+        trans.display("MONITOR");
+        mon2scb_mbx.put(trans);
       end
-
-      mon2scb_mbx.put(trans);
-      trans.display("Monitor");
     end
-
   endtask
+
 endclass : monitor

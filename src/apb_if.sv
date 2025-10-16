@@ -1,6 +1,6 @@
 interface apb_if (
-    input bit PCLK,
-    input bit PRESETn
+    input logic PCLK,
+    input logic PRESETn
 );
   import apb_pkg::*;
 
@@ -25,12 +25,19 @@ interface apb_if (
     output PRDATA, PREADY;
   endclocking
 
+  clocking monitor_cb @(posedge PCLK);
+    default input #1ns output #1ns;
+    input PADDR, PWRITE, PSEL, PENABLE, PWDATA, PRDATA, PREADY;
+  endclocking
+
   modport master(input PCLK, PRESETn, PRDATA, PREADY, output PADDR, PWRITE, PSEL, PENABLE, PWDATA);
 
   modport slave(input PCLK, PRESETn, PADDR, PWRITE, PSEL, PENABLE, PWDATA, output PRDATA, PREADY);
 
-  modport master_dv(input PCLK, PRESETn, clocking master_cb);
+  modport master_dv(clocking master_cb, input PCLK, PRESETn);
 
-  modport slave_dv(input PCLK, PRESETn, clocking slave_cb);
+  modport slave_dv(clocking slave_cb, input PCLK, PRESETn);
+
+  modport monitor_dv(clocking monitor_cb, input PCLK, PRESETn);
 
 endinterface

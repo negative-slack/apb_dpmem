@@ -1,5 +1,3 @@
-import apb_pkg::*;
-
 class driver;
 
   virtual apb_if vif;
@@ -11,59 +9,65 @@ class driver;
     this.gen2dri_mbx = gen2dri_mbx;
   endfunction
 
-  // cycle_start
-  task cycle_start;
-    @(posedge vif.master_dv.PCLK);
-  endtask : cycle_start
-
   task main();
     forever begin
       gen2dri_mbx.get(trans);
-      if (trans.PWRITE == 1) begin
-        apb_write(trans.PADDR, trans.PWRITE, trans.PWDATA);
+      if (trans.req.pwrite == 1) begin
+        apb_write(trans.req.paddr, trans.req.pwrite, trans.req.pwdata);
       end else begin
-        apb_read(trans.PADDR);
+        apb_read(trans.req.paddr, trans.rsp.prdata);
       end
       trans.display("DRIVER");
     end
   endtask : main
 
-  task apb_write(addr_t paddr, bit pwrite, data_t pwdata);
-    cycle_start();
-    vif.master.PADDR <= paddr;
-    vif.master.PWRITE <= 1;
-    vif.master.PSEL <= 1;
-    vif.master.PENABLE <= 0;
-    vif.master.PWDATA <= pwdata;
+  // cycle_start
+  task cycle_start;
+    @(posedge vif.PCLK);
+  endtask : cycle_start
 
-    cycle_start();
-    vif.master.PADDR <= paddr;
-    vif.master.PWRITE <= 1;
-    vif.master.PSEL <= 1;
-    vif.master.PENABLE <= 1;  // HIGH NOW
-    vif.master.PWDATA <= pwdata;
+  task apb_write(input addr_t paddr, bit pwrite, data_t pwdata);
 
-    wait (vif.master.PREADY == 1);
-    vif.master.PSEL <= 0;
-    vif.master.PENABLE <= 0;
+    // setup_phase
+    cycle_start();
+    vif.master_dv.master_cb.PADDR <= paddr;
+    vif.master_dv.master_cb.PWRITE <= 1;
+    vif.master_dv.master_cb.PSEL <= 1;
+    vif.master_dv.master_cb.PENABLE <= 0;
+    vif.master_dv.master_cb.PWDATA <= pwdata;
+
+    // access_phase
+    cycle_start();
+    vif.master_dv.master_cb.PENABLE <= 1;  // HIGH NOW
+
+    wait (vif.master_dv.master_cb.PREADY == 1);
+
+    vif.master_dv.master_cb.PADDR <= 0;
+    vif.master_dv.master_cb.PWRITE <= 0;
+    vif.master_dv.master_cb.PSEL <= 0;
+    vif.master_dv.master_cb.PENABLE <= 0;
+    vif.master_dv.master_cb.PWDATA <= 0;
+
   endtask
 
-  task apb_read(addr_t paddr);
-    cycle_start();
-    vif.master.PADDR <= paddr;
-    vif.master.PWRITE <= 0;
-    vif.master.PSEL <= 1;
-    vif.master.PENABLE <= 0;
+  task apb_read(input addr_t paddr, output data_t prdata);
 
     cycle_start();
-    vif.master.PADDR <= paddr;
-    vif.master.PWRITE <= 0;
-    vif.master.PSEL <= 1;
-    vif.master.PENABLE <= 1;  // HIGH NOW
+    vif.master_dv.master_cb.PADDR <= paddr;
+    vif.master_dv.master_cb.PWRITE <= 0;
+    vif.master_dv.master_cb.PSEL <= 1;
+    vif.master_dv.master_cb.PENABLE <= 0;
 
-    wait (vif.master.PREADY == 1);
-    vif.master.PSEL <= 0;
-    vif.master.PENABLE <= 0;
+    cycle_start();
+    vif.master_dv.master_cb.PENABLE <= 1;  // HIGH NOW
+
+    wait (vif.master_dv.master_cb.PREADY == 1);
+
+    vif.master_dv.master_cb.PADDR <= 0;
+    vif.master_dv.master_cb.PWRITE <= 0;
+    vif.master_dv.master_cb.PSEL <= 0;
+    vif.master_dv.master_cb.PENABLE <= 0;
+
   endtask
 
 endclass : driver

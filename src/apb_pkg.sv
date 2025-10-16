@@ -10,6 +10,6 @@ typedef enum bit [1:0] {
     IDLE,
     SETUP,
     ACCESS
-} apb_operation_states;
+} apb_state_t;
 
 endpackage

@@ -3,7 +3,7 @@ module apb (
 );
   import apb_pkg::*;
 
-  apb_operation_states apb_state;
+  apb_state_t apb_state;
 
   parameter MEM_DEPTH = 1024;
   addr_t MEM[0:MEM_DEPTH-1];

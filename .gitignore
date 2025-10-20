@@ -3,3 +3,5 @@ apb_prj
 xsim.dir
 *.log
 *.jou
+*.txt
+*.wdb

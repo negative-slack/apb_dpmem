@@ -1,9 +1,7 @@
 class scoreboard;
 
   mailbox mon2scb_mbx;
-
-  addr_t scb_mem[0:1023];
-
+  data_t scb_mem[0:1023];
   int cnt;
 
   function new(mailbox mon2scb_mbx);
@@ -17,18 +15,24 @@ class scoreboard;
       mon2scb_mbx.get(trans);
       trans.display("Scoreboard");
 
-      if (trans.PWRITE == 1) scb_mem[trans.PADDR] = trans.PWDATA;
-
-      if (trans.PWRITE == 0) begin
-        assert (trans.PRDATA == scb_mem[trans.PADDR]) begin
+      if (trans.req.pwrite) begin
+        scb_mem[trans.req.paddr] = trans.req.pwdata;
+      end else begin
+        assert (trans.rsp.prdata == scb_mem[trans.req.paddr])
+        else
+          $error(
+              "Scoreboard MISMATCH at addr %0h: expected %0h, got %0h",
+              trans.req.paddr,
+              scb_mem[trans.req.paddr],
+              trans.rsp.prdata
+          );
+        // $fatal;
+        if (trans.rsp.prdata == scb_mem[trans.req.paddr]) begin
           cnt++;
-          $display("MATCH!! cnt  = %0d", cnt);
-        end else begin
-          $display("MISMATCH!!");
-          $fatal;
+          $display("Scoreboard MATCH! Count = %0d", cnt);
         end
       end
     end
-  endtask
+  endtask : main
 
 endclass

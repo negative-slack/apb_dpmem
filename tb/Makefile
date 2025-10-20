@@ -4,3 +4,6 @@ clean:
 
 vivado:
 	vivado -mode tcl -source run.tcl
+
+verilator:
+	verilator -Wall --cc --sv -f apb.f --top-module top

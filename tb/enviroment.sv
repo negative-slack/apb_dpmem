@@ -5,19 +5,19 @@ class environment;
   monitor        mon;
   scoreboard     scb;
 
-  mailbox        m1;
-  mailbox        m2;
+  mailbox        gen2dri_t;
+  mailbox        mon2scb_t;
 
   virtual apb_if vif;
 
   function new(virtual apb_if vif);
-    this.vif = vif;
-    m1       = new();
-    m2       = new();
-    gen      = new(m1);
-    dri      = new(vif, m1);
-    mon      = new(vif, m2);
-    scb      = new(m2);
+    this.vif  = vif;
+    gen2dri_t = new();
+    mon2scb_t = new();
+    gen       = new(gen2dri_t);
+    dri       = new(vif, gen2dri_t);
+    mon       = new(vif, mon2scb_t);
+    scb       = new(mon2scb_t);
   endfunction
 
   task test();

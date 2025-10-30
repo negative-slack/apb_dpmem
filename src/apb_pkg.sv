@@ -1,3 +1,6 @@
+`ifndef APB_PKG
+`define APB_PKG 
+
 package apb_pkg;
 
   localparam int ADDR_WIDTH = 10;
@@ -12,20 +15,18 @@ package apb_pkg;
     ACCESS
   } apb_state_t;
 
-  typedef enum bit {
-    READ  = 0,
-    WRITE = 1
-  } apb_rw_t;
-
   typedef struct packed {
-    addr_t   paddr;
-    apb_rw_t pwrite;
-    data_t   pwdata;
+    addr_t paddr;
+    logic  pwrite;
+    data_t pwdata;
   } apb_req_t;
 
   typedef struct packed {
+    logic  pslverr;
+    logic  pready;
     data_t prdata;
-    bit pready;
   } apb_rsp_t;
 
 endpackage : apb_pkg
+
+`endif

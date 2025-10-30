@@ -1,11 +1,13 @@
 ../src/apb_pkg.sv
 ../src/apb_if.sv
+../src/apb_assertions.sv
 ../src/apb.sv
 ./transaction.sv
 ./generator.sv
 ./driver.sv
 ./monitor.sv
 ./scoreboard.sv
+./apb_cvg.sv
 ./enviroment.sv
 ./test.sv
 ./top.sv

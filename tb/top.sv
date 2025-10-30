@@ -3,18 +3,10 @@
 module top;
 
   bit clk;
-  bit rst_n;
-
-  // reset_n generate for two clock cycles
-  initial begin
-    rst_n = 1'b0;
-    @(negedge clk);
-    rst_n = 1'b1;
-  end
 
   // clk generation
   initial begin
-    clk = 1;
+    clk = 0;
     forever begin
       #10;
       clk = ~clk;
@@ -24,15 +16,24 @@ module top;
   initial begin
     $dumpfile("apb.vcd");
     $dumpvars(0, top);
+    #50000 $stop;
   end
 
-  apb_if intf_t (
-      .PCLK(clk),
-      .PRESETn(rst_n)
-  );
+  apb_if top_intf (.PCLK(clk));
 
-  test t1 (intf_t);
+  test t1 (top_intf);
 
-  apb dut (.apb_slave(intf_t));
+  apb dut (.apb_slave(top_intf));
+
+  bind apb_if apb_assertions apb_asserts_inst (.intf(top_intf.assert_mp));
 
 endmodule
+
+  // initial begin
+  //   apb_if.slave.PRESETn = 1;
+  //   apb_if.slave.PSEL = 0;
+  //   apb_if.slave.PADDR = '0;
+  //   apb_if.slave.PWRITE = 0;
+  //   apb_if.slave.PWDATA = 32'hDEADDEAD;
+  //   apb_if.slave.PENABLE = 0;
+  // end

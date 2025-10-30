@@ -1,43 +1,46 @@
 interface apb_if (
-    input logic PCLK,
-    input logic PRESETn
+    input bit PCLK
 );
+
   import apb_pkg::*;
 
+  // mst output
+  logic  PRESETn;  // reset negative
+  logic  PSEL;  // slave select
   addr_t PADDR;  // address to write to or read from!
   logic  PWRITE;  // 1: write, 0: read
-  logic  PSEL;  // slave select
-  logic  PENABLE;  // 2nd/subsequent cycle of the apb protocol
   data_t PWDATA;  // write data value
+  logic  PENABLE;  // 2nd/subsequent cycle of the apb protocol
 
-  data_t PRDATA;
+  // slv output
+  logic  PSLVERR;
   logic  PREADY;
+  data_t PRDATA;
 
-  clocking master_cb @(posedge PCLK);
-    default input #1ns output #1ns;
-    input PRDATA, PREADY;
-    output PADDR, PWRITE, PSEL, PENABLE, PWDATA;
-  endclocking
-
-  clocking slave_cb @(posedge PCLK);
-    default input #1ns output #1ns;
-    input PADDR, PWRITE, PSEL, PENABLE, PWDATA;
-    output PRDATA, PREADY;
+  clocking driver_cb @(posedge PCLK);
+    // default input #1step output #1ns;
+    input PSLVERR, PREADY, PRDATA;
+    output PRESETn, PSEL, PADDR, PWRITE, PWDATA, PENABLE;
   endclocking
 
   clocking monitor_cb @(posedge PCLK);
-    default input #1ns output #1ns;
-    input PADDR, PWRITE, PSEL, PENABLE, PWDATA, PRDATA, PREADY;
+    // default input #1step;
+    input PRESETn, PSEL, PADDR, PWRITE, PWDATA, PENABLE, PSLVERR, PREADY, PRDATA;
   endclocking
 
-  modport master(input PCLK, PRESETn, PRDATA, PREADY, output PADDR, PWRITE, PSEL, PENABLE, PWDATA);
+  // use for synthesize
+  modport slave(
+      input PCLK, PRESETn, PSEL, PADDR, PWRITE, PWDATA, PENABLE,
+      output PSLVERR, PREADY, PRDATA
+  );
 
-  modport slave(input PCLK, PRESETn, PADDR, PWRITE, PSEL, PENABLE, PWDATA, output PRDATA, PREADY);
+  // use for assertions
+  modport assert_mp(
+      input PCLK, PRESETn, PSEL, PADDR, PWRITE, PWDATA, PENABLE, PSLVERR, PREADY, PRDATA
+  );
 
-  modport master_dv(clocking master_cb, input PCLK, PRESETn);
-
-  modport slave_dv(clocking slave_cb, input PCLK, PRESETn);
-
-  modport monitor_dv(clocking monitor_cb, input PCLK, PRESETn);
+  // use for verification
+  modport driver_dv(clocking driver_cb);
+  modport monitor_dv(clocking monitor_cb);
 
 endinterface

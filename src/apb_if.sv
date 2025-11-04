@@ -8,7 +8,7 @@ interface apb_if (
   logic  PRESETn;  // reset negative
   logic  PSEL;  // slave select
   addr_t PADDR;  // address to write to or read from!
-  logic  PWRITE;  // 1: write, 0: read
+  logic  PWRITE;  // 0: read, 1: write 
   data_t PWDATA;  // write data value
   logic  PENABLE;  // 2nd/subsequent cycle of the apb protocol
 
@@ -34,8 +34,8 @@ interface apb_if (
       output PSLVERR, PREADY, PRDATA
   );
 
-  // use for assertions
-  modport assert_mp(
+  // use for assertions (bind in the top class)
+  modport monitor_mp(
       input PCLK, PRESETn, PSEL, PADDR, PWRITE, PWDATA, PENABLE, PSLVERR, PREADY, PRDATA
   );
 
@@ -43,4 +43,4 @@ interface apb_if (
   modport driver_dv(clocking driver_cb);
   modport monitor_dv(clocking monitor_cb);
 
-endinterface
+endinterface : apb_if

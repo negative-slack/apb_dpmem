@@ -6,7 +6,7 @@ module top;
 
   // clk generation
   initial begin
-    clk = 0;
+    clk = 1;
     forever begin
       #10;
       clk = ~clk;
@@ -25,15 +25,6 @@ module top;
 
   apb dut (.apb_slave(top_intf));
 
-  bind apb_if apb_assertions apb_asserts_inst (.intf(top_intf.assert_mp));
+  bind apb_if apb_assertions apb_asserts_dut (.intf(top_intf.monitor_mp));
 
 endmodule
-
-  // initial begin
-  //   apb_if.slave.PRESETn = 1;
-  //   apb_if.slave.PSEL = 0;
-  //   apb_if.slave.PADDR = '0;
-  //   apb_if.slave.PWRITE = 0;
-  //   apb_if.slave.PWDATA = 32'hDEADDEAD;
-  //   apb_if.slave.PENABLE = 0;
-  // end

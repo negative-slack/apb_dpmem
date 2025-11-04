@@ -1,5 +1,5 @@
 `ifndef APB_PKG
-`define APB_PKG 
+`define APB_PKG
 
 package apb_pkg;
 

@@ -11,7 +11,7 @@ class monitor;
     transaction trans;
 
     forever begin
-      @(mon_intf.monitor_cb);  // Clocking block event
+      @(mon_intf.monitor_cb);
 
       if (mon_intf.monitor_cb.PSEL && 
           mon_intf.monitor_cb.PENABLE && 
@@ -34,4 +34,5 @@ class monitor;
     end
 
   endtask
+
 endclass : monitor

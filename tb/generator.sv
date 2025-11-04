@@ -13,9 +13,11 @@ class generator;
   task main();
     for (int i = 0; i < num_trans; i++) begin
       trans = new();
-      assert (trans.randomize());
+      assert (trans.randomize())
+      else $error("Transaction:%0d/%0d is not randomized", i + 1, num_trans);
       trans.display("Generator");
-      $display("t=%0t The Generator created the loop:%0d/%0d as above", $time, i + 1, num_trans);
+      $display("t=%0t The Generator created the Transaction:%0d/%0d as above",  // 
+               $time, i + 1, num_trans);
       gen2dri_mbx.put(trans);
     end
     $display("---------------------------------------------------------------------------");

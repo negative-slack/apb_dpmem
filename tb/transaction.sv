@@ -9,13 +9,13 @@ class transaction;
   constraint dist_c {
 
     PRESETn dist {
-      0 :/ 0, 
-      1 :/ 100
+      0 :/ 10,
+      1 :/ 90
     };
 
     req.pwrite dist {
-      0 := 50,
-      1 := 50
+      0 :/ 50,
+      1 :/ 50
     };
 
   }
@@ -26,8 +26,8 @@ class transaction;
     $display("-------------------------");
     $display("- %s ", module_name);
     $display("-------------------------");
-    $display("t=%0.3f ns, PRESETn=%0b PADDR=%0h, PWRITE=%0b, PWDATA=%0h",  //
-             $time, PRESETn, req.paddr, req.pwrite, req.pwdata);
+    $display("t=%0.3f ns,  PADDR=%0h, PWRITE=%0b, PWDATA=%0h",  //
+             $time, req.paddr, req.pwrite, req.pwdata);
   endfunction : display
 
 endclass : transaction

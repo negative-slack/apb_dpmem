@@ -26,19 +26,18 @@ class environment;
     cvg       = new(vif);
   endfunction
 
-  task test();
+  task run();
     fork
-      gen.main();
-      dri.main();
-      mon.main();
-      scb.main();
-      cvg.main();
+      gen.run();
+      dri.run();
+      mon.run();
+      scb.run();
+      cvg.run();
     join
-    wait (gen.gen_ended.triggered);
   endtask
 
-  task run;
-    test();
+  task main;
+    run();
     $stop;
   endtask
 

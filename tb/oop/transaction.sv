@@ -9,8 +9,8 @@ class transaction;
   constraint dist_c {
 
     PRESETn dist {
-      0 :/ 10,
-      1 :/ 90
+      0 :/ 2,
+      1 :/ 98
     };
 
     req.pwrite dist {

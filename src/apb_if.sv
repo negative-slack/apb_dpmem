@@ -1,3 +1,6 @@
+`ifndef APB_IF__SV
+`define APB_IF__SV 
+
 interface apb_if (
     input bit PCLK
 );
@@ -7,7 +10,7 @@ interface apb_if (
   // mst output
   logic  PRESETn;  // reset negative
   logic  PSEL;  // slave select
-  addr_t PADDR;  // address to write to or read from!
+  addr_t PADDR;  // address to write to or read from
   logic  PWRITE;  // 0: read, 1: write 
   data_t PWDATA;  // write data value
   logic  PENABLE;  // 2nd/subsequent cycle of the apb protocol
@@ -44,3 +47,5 @@ interface apb_if (
   modport monitor_dv(clocking monitor_cb);
 
 endinterface : apb_if
+
+`endif

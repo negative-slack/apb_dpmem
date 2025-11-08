@@ -1,9 +1,8 @@
 class scoreboard;
-  import apb_pkg::*;
 
   mailbox mon2scb_mbx;
   data_t scb_mem[0:1023];
-  int match_cnt;
+  int read_match_cnt;
   transaction trans;
 
   function new(mailbox mon2scb_mbx);
@@ -11,7 +10,7 @@ class scoreboard;
     foreach (scb_mem[i]) scb_mem[i] = i;
   endfunction
 
-  task main;
+  task run;
     forever begin
       mon2scb_mbx.get(trans);
       trans.display("Scoreboard");
@@ -27,11 +26,11 @@ class scoreboard;
               trans.rsp.prdata
           );
         if (trans.rsp.prdata == scb_mem[trans.req.paddr]) begin
-          match_cnt++;
-          $display("Scoreboard MATCH! Count = %0d", match_cnt);
+          read_match_cnt++;
+          $display("Scoreboard MATCH! Count = %0d", read_match_cnt);
         end
       end
     end
-  endtask : main
+  endtask : run
 
 endclass

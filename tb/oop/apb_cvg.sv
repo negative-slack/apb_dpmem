@@ -48,7 +48,7 @@ class apb_coverage;
     apb_cg = new();
   endfunction
 
-  task main();
+  task run();
     forever begin
       @(posedge cov_intf.PCLK iff (cov_intf.PSEL && !cov_intf.PENABLE && !cov_intf.PREADY));
 

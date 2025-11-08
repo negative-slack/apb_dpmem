@@ -1,5 +1,5 @@
-`ifndef APB_PKG
-`define APB_PKG
+`ifndef APB_PKG__SV
+`define APB_PKG__SV
 
 package apb_pkg;
 

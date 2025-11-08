@@ -1,3 +1,6 @@
+`ifndef APB__SV
+`define APV__SV 
+
 module apb (
     apb_if.slave apb_slave
 );
@@ -15,7 +18,7 @@ module apb (
     if (!apb_slave.PRESETn) begin
       apb_state <= IDLE;
       apb_slave.PSLVERR <= 0;
-      apb_slave.PREADY <= 1;
+      apb_slave.PREADY <= 0;
       apb_slave.PRDATA <= '0;
     end else begin
       case (apb_state)
@@ -35,11 +38,10 @@ module apb (
           if (apb_slave.PSEL && apb_slave.PENABLE) begin
             apb_state <= ACCESS;
             apb_slave.PREADY <= 1;
-
             if (apb_slave.PADDR >= MEM_DEPTH) begin
               apb_slave.PSLVERR <= 1;
               apb_slave.PRDATA  <= '0;
-              $error("Mem addr is above the limit");
+              $error("Mem ADDR over the MEM_DEPTH");
             end else if (apb_slave.PWRITE) begin
               MEM[apb_slave.PADDR] <= apb_slave.PWDATA;  // WRITE
             end else begin
@@ -51,12 +53,11 @@ module apb (
         end
 
         ACCESS: begin
-          if (!apb_slave.PSEL) begin
-            apb_state <= IDLE;
-            apb_slave.PREADY <= 1;
-          end else begin
+          apb_slave.PREADY <= 0;
+          if (apb_slave.PSEL) begin
             apb_state <= SETUP;
-            apb_slave.PREADY <= 0;
+          end else begin
+            apb_state <= IDLE;
           end
         end
 
@@ -69,3 +70,5 @@ module apb (
   end
 
 endmodule : apb
+
+`endif

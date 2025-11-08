@@ -1,4 +1,7 @@
+`define DRI dri_intf.driver_cb
+
 class driver;
+
 
   virtual apb_if dri_intf;
   mailbox gen2dri_mbx;
@@ -13,36 +16,36 @@ class driver;
   endfunction
 
   task cycle();
-    @(dri_intf.driver_cb);
+    @(`DRI);
   endtask : cycle
 
   task idle_state();
-    dri_intf.driver_cb.PSEL <= 0;  // low 
-    dri_intf.driver_cb.PADDR <= '0;
-    dri_intf.driver_cb.PWRITE <= 0;
-    dri_intf.driver_cb.PWDATA <= '0;
-    dri_intf.driver_cb.PENABLE <= 0;  // low
+    `DRI.PSEL <= 0;  // low 
+    `DRI.PADDR <= '0;
+    `DRI.PWRITE <= 0;
+    `DRI.PWDATA <= '0;
+    `DRI.PENABLE <= 0;  // low
   endtask
 
   task setup_state(input addr_t paddr, logic pwrite, data_t pwdata);
-    dri_intf.driver_cb.PSEL <= 1;  // high
-    dri_intf.driver_cb.PADDR <= paddr;
-    dri_intf.driver_cb.PWRITE <= pwrite;
-    dri_intf.driver_cb.PWDATA <= pwdata;
-    dri_intf.driver_cb.PENABLE <= 0;  // low
+    `DRI.PSEL <= 1;  // high
+    `DRI.PADDR <= paddr;
+    `DRI.PWRITE <= pwrite;
+    `DRI.PWDATA <= pwdata;
+    `DRI.PENABLE <= 0;  // low
   endtask
 
   task access_state();
-    dri_intf.driver_cb.PSEL <= 1;  // high
-    dri_intf.driver_cb.PENABLE <= 1;  // high
+    `DRI.PSEL <= 1;  // high
+    `DRI.PENABLE <= 1;  // high
   endtask
 
   task drive();
-    dri_intf.driver_cb.PRESETn <= trans.PRESETn;
+    `DRI.PRESETn <= trans.PRESETn;
 
     if (!trans.PRESETn) begin
-      #20;
-      dri_intf.driver_cb.PRESETn <= 1;
+      cycle();
+      `DRI.PRESETn <= 1;
     end else begin
 
       idle_state();
@@ -52,21 +55,19 @@ class driver;
       cycle();
 
       access_state();
-      cycle();
 
-      wait (dri_intf.driver_cb.PREADY == 1);
-      idle_state();
+      wait (`DRI.PREADY == 1);
 
     end
   endtask
 
-  task main();
+  task run();
     forever begin
       gen2dri_mbx.get(trans);
       drive();
       trans.display("DRIVER");
     end
     ->dri_ended;
-  endtask : main
+  endtask : run
 
 endclass : driver

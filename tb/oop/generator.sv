@@ -10,7 +10,7 @@ class generator;
     this.gen_ended   = gen_ended;
   endfunction
 
-  task main();
+  task run();
     for (int i = 0; i < num_trans; i++) begin
       trans = new();
       assert (trans.randomize())
@@ -24,7 +24,7 @@ class generator;
     $display("t = %0t [Generator] Done generation of %0d items", $time, num_trans);
     $display("---------------------------------------------------------------------------");
     ->gen_ended;
-  endtask : main
+  endtask : run
 
 endclass : generator
 

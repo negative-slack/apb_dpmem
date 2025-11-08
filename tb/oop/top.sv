@@ -1,4 +1,4 @@
-`include "../src/apb_if.sv"
+`include "../../src/apb.sv"
 
 module top;
 

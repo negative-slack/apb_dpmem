@@ -1,10 +1,13 @@
-class monitor;
+`ifndef MONITOR__SV
+`define MONITOR__SV 
 
-  `define MON mon_intf.monitor_cb
+class monitor;
 
   virtual apb_if mon_intf;
   mailbox mon2scb_mbx;
   transaction trans;
+
+  `define MON mon_intf.monitor_cb
 
   function new(virtual apb_if mon_intf, mailbox mon2scb_mbx);
     this.mon_intf = mon_intf;
@@ -35,4 +38,8 @@ class monitor;
 
   endtask
 
+  `undef MON
+
 endclass : monitor
+
+`endif

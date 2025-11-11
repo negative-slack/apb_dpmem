@@ -16,7 +16,6 @@ module top;
   initial begin
     $dumpfile("apb.vcd");
     $dumpvars(0, top);
-    #50000 $stop;
   end
 
   apb_if top_intf (.PCLK(clk));

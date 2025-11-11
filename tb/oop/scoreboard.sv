@@ -1,3 +1,6 @@
+`ifndef SCOREBOARD__SV
+`define SCOREBOARD__SV 
+
 class scoreboard;
 
   mailbox mon2scb_mbx;
@@ -7,7 +10,6 @@ class scoreboard;
 
   function new(mailbox mon2scb_mbx);
     this.mon2scb_mbx = mon2scb_mbx;
-    foreach (scb_mem[i]) scb_mem[i] = i;
   endfunction
 
   task run;
@@ -34,3 +36,5 @@ class scoreboard;
   endtask : run
 
 endclass
+
+`endif

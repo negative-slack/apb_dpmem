@@ -32,7 +32,7 @@ interface apb_if (
   endclocking
 
   // use for synthesize
-  modport slave(
+  modport slave_mp(
       input PCLK, PRESETn, PSEL, PADDR, PWRITE, PWDATA, PENABLE,
       output PSLVERR, PREADY, PRDATA
   );

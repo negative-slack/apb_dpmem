@@ -1,5 +1,5 @@
 `ifndef APB_PKG__SV
-`define APB_PKG__SV
+`define APB_PKG__SV 
 
 package apb_pkg;
 
@@ -22,8 +22,8 @@ package apb_pkg;
   } apb_req_t;
 
   typedef struct packed {
-    logic  pslverr;
-    logic  pready;
+    logic pslverr;
+    logic [2:0] pready;
     data_t prdata;
   } apb_rsp_t;
 

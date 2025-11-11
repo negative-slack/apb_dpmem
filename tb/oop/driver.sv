@@ -1,13 +1,15 @@
-`define DRI dri_intf.driver_cb
+`ifndef DRIVER__SV
+`define DRIVER__SV 
 
 class driver;
-
 
   virtual apb_if dri_intf;
   mailbox gen2dri_mbx;
   event dri_ended;
 
   transaction trans;
+
+  `define DRI dri_intf.driver_cb
 
   function new(virtual apb_if dri_intf, mailbox gen2dri_mbx, event dri_ended);
     this.dri_intf = dri_intf;
@@ -62,7 +64,7 @@ class driver;
   endtask
 
   task run();
-    forever begin
+    for (int i = 0; i < 1000; i++) begin
       gen2dri_mbx.get(trans);
       drive();
       trans.display("DRIVER");
@@ -70,4 +72,8 @@ class driver;
     ->dri_ended;
   endtask : run
 
+  `undef DRI
+
 endclass : driver
+
+`endif

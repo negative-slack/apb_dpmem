@@ -1,3 +1,5 @@
+`ifndef ENVIROMENT__SV
+`define ENVIROMENT__SV 
 
 class environment;
 
@@ -33,12 +35,16 @@ class environment;
       mon.run();
       scb.run();
       cvg.run();
-    join
+    join_none
+
+    @(dri_ended);
   endtask
 
   task main;
     run();
-    $stop;
+    $finish;
   endtask
 
 endclass
+
+`endif

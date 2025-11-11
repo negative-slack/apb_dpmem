@@ -1,3 +1,6 @@
+`ifndef APB_ASSERTIONS__SV
+`define APB_ASSERTIONS__SV 
+
 program apb_assertions (
     apb_if.monitor_mp intf
 );
@@ -84,6 +87,7 @@ program apb_assertions (
 
 endprogram
 
+`endif
 
 //   /* 1. PSEL-PENABLE Timing : Check that PENABLE signal
 //  is asserted exactly one cycle after PSEL is asserted. */

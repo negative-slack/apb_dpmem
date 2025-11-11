@@ -1,11 +1,16 @@
+/********************************************************************
+ *  Copyright (C) 2025 by negative-slack (nader.10.1997@hotmail.com).
+ *  All right reserved.
+*********************************************************************/
+
 `ifndef APB_IF__SV
 `define APB_IF__SV 
 
-interface apb_if (
+interface apb_if
+  import apb_pkg::*;
+(
     input bit PCLK
 );
-
-  import apb_pkg::*;
 
   // mst output
   logic  PRESETn;  // reset negative

@@ -51,11 +51,11 @@ class driver;
     end else begin
 
       idle_state();
-      cycle();
 
+      cycle();
       setup_state(trans.req.paddr, trans.req.pwrite, trans.req.pwdata);
-      cycle();
 
+      cycle();
       access_state();
 
       wait (`DRI.PREADY == 1);

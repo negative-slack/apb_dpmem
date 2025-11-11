@@ -22,8 +22,8 @@ package apb_pkg;
   } apb_req_t;
 
   typedef struct packed {
-    logic pslverr;
-    logic [2:0] pready;
+    logic  pslverr;
+    logic  pready;
     data_t prdata;
   } apb_rsp_t;
 

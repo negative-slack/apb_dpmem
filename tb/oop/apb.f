@@ -1,7 +1,7 @@
 ../../src/apb_pkg.sv
 ../../src/apb_if.sv
-../../src/apb_assertions.sv
 ../../src/apb.sv
+./apb_assertions.sv
 ./transaction.sv
 ./generator.sv
 ./driver.sv

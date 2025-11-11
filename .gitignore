@@ -1,0 +1,6 @@
+vivado_prj
+tb/oop/.xsim.dir
+tb/oop/*.log
+tb/oop/*.jou
+tb/oop/*.txt
+tb/oop/*.wdb

@@ -9,11 +9,8 @@ class transaction;
   rand apb_req_t req;
   apb_rsp_t rsp;
 
-  // rand int pready_delay;
-  // int max_pready_delay = 5;
-  // function void post_randomize();
-  //   rsp.pready = pready_delay;
-  // endfunction
+  rand int pready_delay;
+  int max_pready_delay = 5;
 
   constraint dist_c {
 
@@ -31,14 +28,14 @@ class transaction;
 
   constraint pwdata_read_c {(req.pwrite == 0) -> (req.pwdata == 0);}
 
-  // constraint pready {pready_delay inside {[1 : max_pready_delay]};}
+  constraint pready_delay_c {pready_delay inside {[1 : max_pready_delay]};}
 
   function void display(string module_name);
     $display("-------------------------");
     $display("- %s ", module_name);
     $display("-------------------------");
-    $display("t=%0.3f ns, PADDR=%0h, PWRITE=%0b, PWDATA=%0h",  // rsp.pready=%0d,
-             $time, req.paddr, req.pwrite, req.pwdata);  //  rsp.pready,
+    $display("t=%0.3f ns, PADDR=%0h, PWRITE=%0b, PWDATA=%0h, pready_delay=%0d",  //
+             $time, req.paddr, req.pwrite, req.pwdata, pready_delay);
   endfunction : display
 
 endclass : transaction

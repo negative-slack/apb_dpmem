@@ -1,3 +1,8 @@
+/********************************************************************
+ *  Copyright (c) 2025 by negative-slack (nader.10.1997@hotmail.com).
+ *  All right reserved.
+*********************************************************************/
+
 `ifndef APB__SV
 `define APV__SV 
 
@@ -46,11 +51,6 @@ module apb
               apb_slave.PSLVERR <= 1;
               $error("Mem ADDR over the MEM_DEPTH");
             end
-            // else if (apb_slave.PWRITE) begin
-            //   MEM[apb_slave.PADDR] <= apb_slave.PWDATA;  // WRITE
-            // end else begin
-            //   apb_slave.PRDATA <= MEM[apb_slave.PADDR];  // READ
-            // end
           end else begin
             apb_state <= SETUP;
           end
@@ -80,6 +80,7 @@ endmodule : apb
 `ifndef DP_MEM__SV
 `define DP_MEM__SV 
 
+// dual-port memory
 module dp_mem
   import apb_pkg::*;
 (

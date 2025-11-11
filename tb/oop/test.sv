@@ -14,7 +14,7 @@ program test (
   end
 
   task initialize_memories();
-    int seed = 123;
+    automatic int seed = 123;
     $display("Initializing DUT and Scoreboard memories...");
 
     for (int i = 0; i < dut.MEM.MEM_DEPTH; i++) begin

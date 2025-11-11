@@ -15,9 +15,9 @@ class apb_coverage;
     // Address range coverage
     addr_cp: coverpoint cov_intf.PADDR {
       bins low_addr = {[0 : 255]};
-      bins mid_addr = {[256 : 767]};
-      bins high_addr = {[768 : 1023]};
-      bins out_of_range = {[1024 : $]};
+      bins low_mid_addr = {[256 : 511]};
+      bins high_mid_addr = {[512 : 767]};
+      bins out_of_range = {[768 : 1023]};
     }
 
     // Wait states coverage - only sample when in SETUP phase

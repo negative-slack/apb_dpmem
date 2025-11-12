@@ -1,7 +1,7 @@
 vivado_prj
 tb/oop/xsim.dir
 tb/oop/xsim.covdb
-tb/oop/xsimcodeCov
+tb/oop/xsim.codeCov
 tb/oop/xcrg_func_cov_report
 tb/oop/xcrg_code_cov_report
 tb/oop/*.log

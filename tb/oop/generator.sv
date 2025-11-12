@@ -1,3 +1,9 @@
+/********************************************
+ *  Copyright (c) 2025 
+ *  Author: negative-slack (Nader Alnatsheh).
+ *  All rights reserved.
+ *******************************************/
+
 `ifndef GENERATOR__SV
 `define GENERATOR__SV 
 

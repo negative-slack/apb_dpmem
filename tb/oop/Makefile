@@ -1,7 +1,3 @@
-clean:
-	@echo "Cleaning up generated files..."
-	rm -rf *.log *.jou *.pb *.dir *.wdb *.txt xsim.codeCov xsim.covdb
-
 cleanw:
 	@echo "Cleaning up generated files..."
 	cmd /C "del /Q *.log *.jou *.pb *.wdb *.txt 2>nul"
@@ -10,6 +6,3 @@ cleanw:
 
 vivado:
 	vivado -mode tcl -source run.tcl
-
-verilator:
-	verilator -Wall --cc --sv -f apb.f --top-module top

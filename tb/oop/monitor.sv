@@ -1,11 +1,11 @@
 `ifndef MONITOR__SV
 `define MONITOR__SV 
 
-class monitor;
+class Monitor;
 
   virtual apb_if mon_intf;
   mailbox mon2scb_mbx;
-  transaction trans;
+  Transaction trans;
 
   `define MON mon_intf.monitor_cb
 
@@ -40,6 +40,6 @@ class monitor;
 
   `undef MON
 
-endclass : monitor
+endclass : Monitor
 
 `endif

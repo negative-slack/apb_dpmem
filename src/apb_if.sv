@@ -1,7 +1,8 @@
-/********************************************************************
- *  Copyright (C) 2025 by negative-slack (nader.10.1997@hotmail.com).
- *  All right reserved.
-*********************************************************************/
+/********************************************
+ *  Copyright (c) 2025 
+ *  Author: negative-slack (Nader Alnatsheh).
+ *  All rights reserved.
+ *******************************************/
 
 `ifndef APB_IF__SV
 `define APB_IF__SV 
@@ -12,17 +13,18 @@ interface apb_if
     input bit PCLK
 );
 
+  bit PRESETn;  // reset negative
+
   // mst output
-  logic  PRESETn;  // reset negative
-  logic  PSEL;  // slave select
+  logic PSEL;  // slave select
   addr_t PADDR;  // address to write to or read from
-  logic  PWRITE;  // 0: read, 1: write 
+  logic PWRITE;  // 0: read, 1: write 
   data_t PWDATA;  // write data value
-  logic  PENABLE;  // 2nd/subsequent cycle of the apb protocol
+  logic PENABLE;  // 2nd/subsequent cycle of the apb protocol
 
   // slv output
-  logic  PSLVERR;
-  logic  PREADY;
+  logic PSLVERR;
+  logic PREADY;
   data_t PRDATA;
 
   clocking driver_cb @(posedge PCLK);
@@ -37,9 +39,14 @@ interface apb_if
   endclocking
 
   // use for synthesize
-  modport slave_mp(
+  modport slv_mp(
       input PCLK, PRESETn, PSEL, PADDR, PWRITE, PWDATA, PENABLE,
       output PSLVERR, PREADY, PRDATA
+  );
+
+  modport mst_mp(
+      output PRESETn, PSEL, PADDR, PWRITE, PWDATA, PENABLE,
+      input PCLK, PSLVERR, PREADY, PRDATA
   );
 
   // use for assertions (bind in the top class)

@@ -1,18 +1,18 @@
 `ifndef SCOREBOARD__SV
 `define SCOREBOARD__SV 
 
-class scoreboard;
+class Scoreboard;
 
   mailbox mon2scb_mbx;
   data_t scb_mem[0:1023];
   int read_match_cnt;
-  transaction trans;
+  Transaction trans;
 
   function new(mailbox mon2scb_mbx);
     this.mon2scb_mbx = mon2scb_mbx;
   endfunction
 
-  task run;
+  task run();
     forever begin
       mon2scb_mbx.get(trans);
       trans.display("Scoreboard");
@@ -35,6 +35,6 @@ class scoreboard;
     end
   endtask : run
 
-endclass
+endclass : Scoreboard
 
 `endif

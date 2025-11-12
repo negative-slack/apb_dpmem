@@ -3,10 +3,10 @@
 
 class environment;
 
-  generator      gen;
-  driver         dri;
-  monitor        mon;
-  scoreboard     scb;
+  Generator      gen;
+  Driver         dri;
+  Monitor        mon;
+  Scoreboard     scb;
   apb_coverage   cvg;
 
   mailbox        gen2dri_t;

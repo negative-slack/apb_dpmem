@@ -1,13 +1,13 @@
 `ifndef DRIVER__SV
 `define DRIVER__SV 
 
-class driver;
+class Driver;
 
   virtual apb_if dri_intf;
   mailbox gen2dri_mbx;
   event dri_ended;
 
-  transaction trans;
+  Transaction trans;
 
   `define DRI dri_intf.driver_cb
 
@@ -58,6 +58,10 @@ class driver;
       cycle();
       access_state();
 
+      repeat (trans.pready_delay) begin
+        cycle();
+      end
+      
       wait (`DRI.PREADY == 1);
 
     end
@@ -74,6 +78,6 @@ class driver;
 
   `undef DRI
 
-endclass : driver
+endclass : Driver
 
 `endif

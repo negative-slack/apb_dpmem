@@ -1,9 +1,9 @@
 `ifndef GENERATOR__SV
 `define GENERATOR__SV 
 
-class generator;
+class Generator;
 
-  transaction trans;
+  Transaction trans;
   mailbox gen2dri_mbx;
   event gen_ended;
   const int num_trans = 1000;
@@ -29,6 +29,6 @@ class generator;
     ->gen_ended;
   endtask : run
 
-endclass : generator
+endclass : Generator
 
 `endif

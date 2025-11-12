@@ -1,16 +1,18 @@
-class apb_coverage;
-  virtual apb_if cov_intf;
+/********************************************
+ *  Copyright (c) 2025 
+ *  Author: negative-slack (Nader Alnatsheh).
+ *  All rights reserved.
+ *******************************************/
 
-  bit in_setup_state;
-  int wait_counter;
+`ifndef APV_CVG__SV
+`define APV_CVG__SV 
+
+class apb_coverage;
+
+  virtual apb_if cov_intf;
 
   // Covergroups
   covergroup apb_cg @(posedge cov_intf.PCLK);
-
-    // operation type coverage
-    read_or_write_opn: coverpoint cov_intf.PWRITE {
-      bins read = {0}; bins write = {1};
-    }
 
     // Address range coverage
     addr_cp: coverpoint cov_intf.PADDR {
@@ -20,20 +22,19 @@ class apb_coverage;
       bins out_of_range = {[768 : 1023]};
     }
 
-    // Wait states coverage - only sample when in SETUP phase
-    wait_states_cp: coverpoint cov_intf.PREADY iff (in_setup_state) {
-      bins no_wait = {1}; bins with_wait = {0};
-    }
+    // operation type coverage
+    read_or_write_opn: coverpoint cov_intf.PWRITE {
+      bins read = {0};  // read only
+      bins write = {1};  // write only
 
-    wait_count_cp: coverpoint wait_counter iff (in_setup_state && !cov_intf.PREADY) {
-      bins zero = {0};
-      bins one = {1};
-      bins two = {2};
-      bins three = {3};
-      bins four = {4};
-      bins five = {5};
-      bins six = {6};
-      bins seven = {7};
+      bins two_reads[] = (0 => 0);
+      bins two_writes[] = (1 => 1);
+
+      bins multiple_reads[] = (0 [* 3: 5]);
+      bins multiple_writes[] = (1 [* 3: 5]);
+
+      bins read_write[] = (0 => 1);
+      bins write_read[] = (1 => 0);
     }
 
     // pslverr coverage
@@ -50,18 +51,11 @@ class apb_coverage;
 
   task run();
     forever begin
-      @(posedge cov_intf.PCLK iff (cov_intf.PSEL && !cov_intf.PENABLE && !cov_intf.PREADY));
-
-      in_setup_state = (cov_intf.PSEL && cov_intf.PENABLE);
-
-      if (in_setup_state && !cov_intf.PREADY) begin
-        wait_counter++;
-      end else begin
-        wait_counter = 0;
-      end
-
+      @(posedge cov_intf.PCLK iff (cov_intf.PSEL && cov_intf.PENABLE && cov_intf.PREADY));
       apb_cg.sample();
     end
   endtask
 
 endclass
+
+`endif

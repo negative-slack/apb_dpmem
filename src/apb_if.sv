@@ -10,7 +10,7 @@
 interface apb_if
   import apb_pkg::*;
 (
-    input bit PCLK
+    input bit PCLK  // system clk
 );
 
   bit PRESETn;  // reset negative
@@ -18,6 +18,7 @@ interface apb_if
   // mst output
   logic PSEL;  // slave select
   addr_t PADDR;  // address to write to or read from
+  strb_t PSTRB;  // write strobe; indicates which byte lane to update during a write transaction (16 diff choice)
   logic PWRITE;  // 0: read, 1: write 
   data_t PWDATA;  // write data value
   logic PENABLE;  // 2nd/subsequent cycle of the apb protocol
@@ -30,28 +31,28 @@ interface apb_if
   clocking driver_cb @(posedge PCLK);
     // default input #1step output #1ns;
     input PSLVERR, PREADY, PRDATA;
-    output PRESETn, PSEL, PADDR, PWRITE, PWDATA, PENABLE;
+    output PRESETn, PSEL, PADDR, PSTRB, PWRITE, PWDATA, PENABLE;
   endclocking
 
   clocking monitor_cb @(posedge PCLK);
     // default input #1step;
-    input PRESETn, PSEL, PADDR, PWRITE, PWDATA, PENABLE, PSLVERR, PREADY, PRDATA;
+    input PRESETn, PSEL, PADDR, PSTRB, PWRITE, PWDATA, PENABLE, PSLVERR, PREADY, PRDATA;
   endclocking
 
-  // use for synthesize
+  // use for synthesis
   modport slv_mp(
-      input PCLK, PRESETn, PSEL, PADDR, PWRITE, PWDATA, PENABLE,
+      input PCLK, PRESETn, PSEL, PADDR, PSTRB, PWRITE, PWDATA, PENABLE,
       output PSLVERR, PREADY, PRDATA
   );
 
   modport mst_mp(
-      output PRESETn, PSEL, PADDR, PWRITE, PWDATA, PENABLE,
+      output PRESETn, PSEL, PADDR, PSTRB, PWRITE, PWDATA, PENABLE,
       input PCLK, PSLVERR, PREADY, PRDATA
   );
 
   // use for assertions (bind in the top class)
   modport monitor_mp(
-      input PCLK, PRESETn, PSEL, PADDR, PWRITE, PWDATA, PENABLE, PSLVERR, PREADY, PRDATA
+      input PCLK, PRESETn, PSEL, PADDR, PSTRB, PWRITE, PWDATA, PENABLE, PSLVERR, PREADY, PRDATA
   );
 
   // use for verification

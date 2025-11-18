@@ -12,7 +12,8 @@ class Generator;
   Transaction trans;
   mailbox gen2dri_mbx;
   event gen_ended;
-  const int num_trans = 1000;
+
+  static int num_trans = 1000;
 
   function new(mailbox gen2dri_mbx, event gen_ended);
     this.gen2dri_mbx = gen2dri_mbx;

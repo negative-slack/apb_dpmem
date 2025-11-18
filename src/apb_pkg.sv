@@ -9,7 +9,7 @@
 
 package apb_pkg;
 
-  localparam int ADDR_WIDTH = 10;
+  localparam int ADDR_WIDTH = 10;  //1024 words
   localparam int DATA_WIDTH = 32;
   localparam int STRB_WIDTH = DATA_WIDTH / 8;
 
@@ -25,6 +25,7 @@ package apb_pkg;
 
   typedef struct packed {
     addr_t paddr;
+    strb_t pstrb;
     logic  pwrite;
     data_t pwdata;
   } apb_req_t;

@@ -11,10 +11,9 @@ class apb_coverage;
 
   virtual apb_if cov_intf;
 
-  // Covergroups
   covergroup apb_cg @(posedge cov_intf.PCLK);
 
-    // Address range coverage
+    // address range coverage
     addr_cp: coverpoint cov_intf.PADDR {
       bins low_addr = {[0 : 255]};
       bins low_mid_addr = {[256 : 511]};

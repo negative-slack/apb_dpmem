@@ -1,3 +1,9 @@
+/********************************************
+ *  Copyright (c) 2025 
+ *  Author: negative-slack (Nader Alnatsheh).
+ *  All rights reserved.
+ *******************************************/
+
 `include "../../src/apb_if.sv"
 `include "../../src/apb_dp_mem.sv"
 

@@ -1,3 +1,9 @@
+/********************************************
+ *  Copyright (c) 2025 
+ *  Author: negative-slack (Nader Alnatsheh).
+ *  All rights reserved.
+ *******************************************/
+
 `ifndef MONITOR__SV
 `define MONITOR__SV 
 
@@ -24,6 +30,7 @@ class Monitor;
         trans = new();
 
         trans.req.paddr = `MON.PADDR;
+        trans.req.pstrb = `MON.PSTRB;
         trans.req.pwrite = `MON.PWRITE;
         if (trans.req.pwrite) begin
           trans.req.pwdata = `MON.PWDATA;

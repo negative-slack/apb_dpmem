@@ -1,10 +1,18 @@
+/********************************************
+ *  Copyright (c) 2025 
+ *  Author: negative-slack (Nader Alnatsheh).
+ *  All rights reserved.
+ *******************************************/
+
 `ifndef SCOREBOARD__SV
 `define SCOREBOARD__SV 
 
 class Scoreboard;
 
+  localparam MEM_DEPTH = 1 << ADDR_WIDTH;
+
   mailbox mon2scb_mbx;
-  data_t scb_mem[0:1023];
+  data_t scb_mem[0:MEM_DEPTH-1];
   int read_match_cnt;
   Transaction trans;
 
@@ -17,7 +25,11 @@ class Scoreboard;
       mon2scb_mbx.get(trans);
       trans.display("Scoreboard");
       if (trans.req.pwrite) begin
-        scb_mem[trans.req.paddr] = trans.req.pwdata;
+        for (int i = 0; i < STRB_WIDTH; i++) begin
+          if (trans.req.pstrb[i]) begin
+            scb_mem[trans.req.paddr][(i*8)+:8] = trans.req.pwdata[(i*8)+:8];
+          end
+        end
       end else begin
         assert (trans.rsp.prdata == scb_mem[trans.req.paddr])
         else

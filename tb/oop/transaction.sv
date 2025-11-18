@@ -14,7 +14,8 @@ class Transaction;
   rand logic PRESETn;
   rand apb_req_t req;
   apb_rsp_t rsp;
-  rand int pready_delay;
+  rand logic back_to_back_xfers;
+  rand int unsigned idle_cycles;
 
   constraint dist_c {
 
@@ -30,16 +31,20 @@ class Transaction;
 
   }
 
-  constraint pwdata_read_c {(req.pwrite == 0) -> (req.pwdata == 0);}
+  constraint pwrite_pwdata_c {(req.pwrite == 0) -> (req.pwdata == 0);}
 
-  constraint pready_delay_c {pready_delay inside {[0 : 4]};}
+  constraint pwrite_pstrb_c {(req.pwrite == 0) -> (req.pstrb == 0);}
+
+  constraint idle_cycles_c {idle_cycles inside {[0 : 5]};}
+  constraint b2b_psel_c {(back_to_back_xfers == 1) -> (idle_cycles == 0);}
 
   function void display(string module_name);
     $display("-------------------------");
     $display("- %s ", module_name);
     $display("-------------------------");
-    $display("t=%0.3f ns, PADDR=%0h, PWRITE=%0b, PWDATA=%0h, pready_delay=%0d",  //
-             $time, req.paddr, req.pwrite, req.pwdata, pready_delay);
+    $display(
+        "t=%0.3f ns, PADDR=%0h, PSTRB=%0b, PWRITE=%0b, PWDATA=%0h, back_to_back_xfers=%0b, idle_cycles=%0d",  //
+        $time, req.paddr, req.pstrb, req.pwrite, req.pwdata, back_to_back_xfers, idle_cycles);
   endfunction : display
 
 endclass : Transaction

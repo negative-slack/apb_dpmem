@@ -1,3 +1,9 @@
+/********************************************
+ *  Copyright (c) 2025 
+ *  Author: negative-slack (Nader Alnatsheh).
+ *  All rights reserved.
+ *******************************************/
+
 `ifndef TEST__SV
 `define TEST__SV 
 
@@ -15,13 +21,13 @@ program test (
 
   task initialize_memories();
     automatic int seed = 123;
-    $display("Initializing DUT and Scoreboard memories...");
+    $display("Initializing the apb_slave and Scoreboard memories...");
 
     for (int i = 0; i < dut.MEM_DEPTH; i++) begin
       automatic data_t random_val = $random(seed);
-      dut.MEM[i]  = random_val;
+      dut.MEM[i] = random_val;
       env.scb.scb_mem[i] = random_val;
-      $display("i=%0d, DUT_MEM=%0h, SCB_MEM=%0h", i, dut.MEM[i], env.scb.scb_mem[i]);
+      $display("i=%0d, APB_SLAVE_MEM=%0h, SCB_MEM=%0h", i, dut.MEM[i], env.scb.scb_mem[i]);
       assert (dut.MEM[i] == env.scb.scb_mem[i]);
     end
 

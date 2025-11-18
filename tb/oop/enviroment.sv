@@ -1,3 +1,9 @@
+/********************************************
+ *  Copyright (c) 2025 
+ *  Author: negative-slack (Nader Alnatsheh).
+ *  All rights reserved.
+ *******************************************/
+
 `ifndef ENVIROMENT__SV
 `define ENVIROMENT__SV 
 

@@ -44,6 +44,8 @@ class environment;
     join_none
 
     @(dri_ended);
+
+    disable fork;
   endtask
 
   task main;

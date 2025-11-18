@@ -40,7 +40,7 @@ class Transaction;
 
   function void display(string module_name);
     $display("-------------------------");
-    $display("- %s ", module_name);
+    $display("- %s", module_name);
     $display("-------------------------");
     $display(
         "t=%0.3f ns, PADDR=%0h, PSTRB=%0b, PWRITE=%0b, PWDATA=%0h, back_to_back_xfers=%0b, idle_cycles=%0d",  //

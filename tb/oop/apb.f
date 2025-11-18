@@ -3,7 +3,7 @@
 ../../src/apb_dp_mem.sv
 
 ./apb_assertions.sv
-./apb_cvg.sv
+./apb_coverage.sv
 ./Transaction.sv
 ./Generator.sv
 ./Driver.sv

@@ -11,7 +11,12 @@ class apb_coverage;
 
   virtual apb_if cov_intf;
 
-  covergroup apb_cg @(posedge cov_intf.PCLK);
+  covergroup apb_cg;
+
+    // presetn coverage
+    presetn_cp: coverpoint cov_intf.PRESETn {
+      bins presetn_0_1 = (0 => 1); bins presetn_1 = {1};
+    }
 
     // address range coverage
     addr_cp: coverpoint cov_intf.PADDR {
@@ -36,6 +41,12 @@ class apb_coverage;
       bins write_read[] = (1 => 0);
     }
 
+    pstrb_cp: coverpoint $countones(
+        cov_intf.PSTRB
+    ) {
+      bins zero = {0}; bins one = {1}; bins two = {2}; bins three = {3}; bins four = {4};
+    }
+
     // pslverr coverage
     error_cp: coverpoint cov_intf.PSLVERR {
       bins no_error = {0}; bins error = {1};
@@ -50,7 +61,7 @@ class apb_coverage;
 
   task run();
     forever begin
-      @(posedge cov_intf.PCLK iff (cov_intf.PSEL && cov_intf.PENABLE && cov_intf.PREADY));
+      @(posedge cov_intf.PCLK iff ((cov_intf.PSEL && cov_intf.PENABLE && cov_intf.PREADY) || !cov_intf.PRESETn ));
       apb_cg.sample();
     end
   endtask

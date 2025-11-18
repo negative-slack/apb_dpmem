@@ -9,12 +9,13 @@
 
 class Scoreboard;
 
-  localparam MEM_DEPTH = 1 << ADDR_WIDTH;
-
-  mailbox mon2scb_mbx;
-  data_t scb_mem[0:MEM_DEPTH-1];
-  int read_match_cnt;
   Transaction trans;
+  mailbox mon2scb_mbx;
+
+  localparam MEM_DEPTH = 1 << ADDR_WIDTH;
+  data_t scb_mem[0:MEM_DEPTH-1];
+
+  int read_match_cnt;
 
   function new(mailbox mon2scb_mbx);
     this.mon2scb_mbx = mon2scb_mbx;

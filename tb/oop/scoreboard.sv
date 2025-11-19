@@ -26,23 +26,25 @@ class Scoreboard;
       mon2scb_mbx.get(trans);
       trans.display("Scoreboard");
       if (trans.req.pwrite) begin
-        for (int i = 0; i < STRB_WIDTH; i++) begin
-          if (trans.req.pstrb[i]) begin
-            scb_mem[trans.req.paddr][(i*8)+:8] = trans.req.pwdata[(i*8)+:8];
+        if (!(trans.req.paddr > 10'h0 && trans.req.paddr < 10'hf)) begin
+          for (int i = 0; i < STRB_WIDTH; i++) begin
+            if (trans.req.pstrb[i]) begin
+              scb_mem[trans.req.paddr][(i*8)+:8] = trans.req.pwdata[(i*8)+:8];
+            end
           end
         end
       end else begin
         assert (trans.rsp.prdata == scb_mem[trans.req.paddr])
         else
           $error(
-              "Scoreboard MISMATCH at addr %0h: expected %0h, got %0h",
+              "Scoreboard ERROR; THERE IS A MISMATCH at addr %0h: expected %0h, got %0h",
               trans.req.paddr,
               scb_mem[trans.req.paddr],
               trans.rsp.prdata
           );
         if (trans.rsp.prdata == scb_mem[trans.req.paddr]) begin
           read_match_cnt++;
-          $display("Scoreboard MATCH! Count = %0d", read_match_cnt);
+          $display("Scoreboard MATCH! READ Count = %0d", read_match_cnt);
         end
       end
     end

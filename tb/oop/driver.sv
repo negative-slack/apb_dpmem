@@ -59,27 +59,37 @@ class Driver;
 
   task drive_b2b_xfers(input addr_t paddr, strb_t pstrb, logic pwrite, data_t pwdata);
 
-    // cycle();
-    setup_state(trans.req.paddr, trans.req.pstrb, trans.req.pwrite, trans.req.pwdata);
-
+    setup_state(paddr, pstrb, pwrite, pwdata);
     cycle();
-    access_state();
 
+    access_state();
     wait (`DRI.PREADY == 1);
 
   endtask
 
   task drive_xfers_w_idle(input addr_t paddr, strb_t pstrb, logic pwrite, data_t pwdata);
-    idle_state();
+    if (trans.idle_cycles > 0) begin
+      repeat (trans.idle_cycles) begin
+        idle_state();
+        cycle();
+      end
 
-    cycle();
-    setup_state(trans.req.paddr, trans.req.pstrb, trans.req.pwrite, trans.req.pwdata);
+      setup_state(paddr, pstrb, pwrite, pwdata);
+      cycle();
 
-    cycle();
-    access_state();
+      access_state();
+      wait (`DRI.PREADY == 1);
 
-    wait (`DRI.PREADY == 1);
+    end else begin
+      idle_state();
+      cycle();
 
+      setup_state(paddr, pstrb, pwrite, pwdata);
+      cycle();
+
+      access_state();
+      wait (`DRI.PREADY == 1);
+    end
   endtask
 
   task drive();
@@ -88,12 +98,7 @@ class Driver;
     if (!trans.PRESETn) begin
       resetn();
     end else if (!trans.back_to_back_xfers) begin
-      if (trans.idle_cycles > 0) begin
-        repeat (trans.idle_cycles) idle_state();
-        drive_xfers_w_idle(trans.req.paddr, trans.req.pstrb, trans.req.pwrite, trans.req.pwdata);
-      end else
-        drive_xfers_w_idle(trans.req.paddr, trans.req.pstrb, trans.req.pwrite, trans.req.pwdata);
-
+      drive_xfers_w_idle(trans.req.paddr, trans.req.pstrb, trans.req.pwrite, trans.req.pwdata);
     end else begin
       drive_b2b_xfers(trans.req.paddr, trans.req.pstrb, trans.req.pwrite, trans.req.pwdata);
     end

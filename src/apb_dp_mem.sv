@@ -90,8 +90,10 @@ module apb_dp_mem
         end else if (apb_slave.PWRITE) begin
           apb_slave.PREADY = (write_cnt == 0);
         end else begin
-          apb_slave.PREADY = (read_cnt == 0);
-          apb_slave.PRDATA = (read_cnt == 0) ? MEM[apb_slave.PADDR] : '0;
+          if (apb_slave.PSEL) begin
+            apb_slave.PREADY = (read_cnt == 0); 
+            apb_slave.PRDATA = (read_cnt == 0) ? MEM[apb_slave.PADDR] : '0;
+          end
         end
       end
     endcase

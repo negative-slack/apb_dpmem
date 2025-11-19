@@ -38,6 +38,7 @@ class Driver;
   task idle_state();
     `DRI.PSEL <= 0;  // low 
     `DRI.PADDR <= '0;
+    `DRI.PSTRB <= '0;
     `DRI.PWRITE <= 0;
     `DRI.PWDATA <= '0;
     `DRI.PENABLE <= 0;  // low

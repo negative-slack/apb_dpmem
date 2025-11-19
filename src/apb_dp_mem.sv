@@ -84,14 +84,14 @@ module apb_dp_mem
 
     case (present_state)
       ACCESS: begin
-        if (apb_slave.PADDR == 10'h111 && apb_slave.PWRITE) begin
+        if ((apb_slave.PADDR > 10'h0 && apb_slave.PADDR < 10'hf) && apb_slave.PWRITE) begin
           apb_slave.PREADY  = 1;
           apb_slave.PSLVERR = 1;
         end else if (apb_slave.PWRITE) begin
           apb_slave.PREADY = (write_cnt == 0);
         end else begin
           if (apb_slave.PSEL) begin
-            apb_slave.PREADY = (read_cnt == 0); 
+            apb_slave.PREADY = (read_cnt == 0);
             apb_slave.PRDATA = (read_cnt == 0) ? MEM[apb_slave.PADDR] : '0;
           end
         end

@@ -27,7 +27,7 @@ class Transaction;
   // }
 
   // constraint to generate a paddr value which has binary all 1s grouped together 
-  constraint paddr_ones_grouped_together {
+  constraint paddr_all_1s_grouped_together {
     one_hot_index inside {[1 : 10]};
     start_position inside {[0 : 9]};
     req.paddr == ((1 << one_hot_index) - 1) << start_position;

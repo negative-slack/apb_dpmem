@@ -97,6 +97,7 @@ module apb_dp_mem
         end
       end
     endcase
+
   end
 
   always_ff @(posedge apb_slave.PCLK or negedge apb_slave.PRESETn) begin
@@ -111,7 +112,7 @@ module apb_dp_mem
         end
 
         ACCESS: begin
-          if (apb_slave.PADDR == 10'h111 && apb_slave.PWRITE) begin
+          if ((apb_slave.PADDR > 10'h0 && apb_slave.PADDR < 10'hf) && apb_slave.PWRITE) begin
             $error("TRYING TO WRITE TO READ ONLY ADDRESS");
             write_cnt <= WRITE_WAIT;
             read_cnt  <= READ_WAIT;

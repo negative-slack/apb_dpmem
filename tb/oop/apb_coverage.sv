@@ -4,8 +4,8 @@
  *  All rights reserved.
  *******************************************/
 
-`ifndef APV_CVG__SV
-`define APV_CVG__SV 
+`ifndef APV_COVERAGE__SV
+`define APV_COVERAGE__SV 
 
 class apb_coverage;
 
@@ -61,8 +61,8 @@ class apb_coverage;
       bins addr8_write = binsof (paddr_cp.addr_8) && binsof (pwrite_cp.write);
 
       ignore_bins others = !( (binsof(paddr_cp.addr_1) || binsof(paddr_cp.addr_2) ||
-                         binsof(paddr_cp.addr_4) || binsof(paddr_cp.addr_8)) 
-                         && binsof(pwrite_cp.write) );
+                               binsof(paddr_cp.addr_4) || binsof(paddr_cp.addr_8))  &&                          
+                               binsof(pwrite_cp.write) );
     }
 
     // pstrb coverage

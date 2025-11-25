@@ -1,15 +1,7 @@
-/********************************************
- *  Copyright (c) 2025 
- *  Author: negative-slack (Nader Alnatsheh).
- *  All rights reserved.
- *******************************************/
+`ifndef APB_TRANSACTION__SV
+`define APB_TRANSACTION__SV 
 
-`ifndef TRANSACTION__SV
-`define TRANSACTION__SV 
-
-import apb_pkg::*;
-
-class Transaction;
+class apb_transaction extends uvm_sequence_item;
 
   rand logic PRESETn;
   rand apb_req_t req;
@@ -19,6 +11,14 @@ class Transaction;
 
   rand int one_hot_index;
   rand int start_position;
+
+  `uvm_object_utils_begin(apb_transaction)
+    `uvm_field_int(PRESETn, UVM_ALL_ON)
+    `uvm_field_int(req, UVM_ALL_ON)
+    `uvm_field_int(rsp, UVM_ALL_ON)
+    `uvm_field_int(back_to_back_xfers, UVM_ALL_ON)
+    `uvm_field_int(idle_cycles, UVM_ALL_ON)
+  `uvm_object_utils_end
 
   // constraint to generate only one hot state values for the paddr
   constraint paddr_one_hot_index {
@@ -70,15 +70,10 @@ class Transaction;
     };
   }
 
-  function void display(string module_name);
-    $display("-------------------------");
-    $display("- %s", module_name);
-    $display("-------------------------");
-    $display(
-        "t=%0.3f ns, PADDR=%0h, PSTRB=%0b, PWRITE=%0b, PWDATA=%0h, back_to_back_xfers=%0b, idle_cycles=%0d",  //
-        $time, req.paddr, req.pstrb, req.pwrite, req.pwdata, back_to_back_xfers, idle_cycles);
-  endfunction : display
+  function new(string name = "");
+    super.new(name);
+  endfunction
 
-endclass : Transaction
+endclass
 
 `endif

@@ -12,7 +12,7 @@ program apb_assertions (
 );
 
   // property to check that a (PRESETn, PSEL)signal is always in a known state
-  property SIGNAL_VALID(logic signal);
+  property SIGNAL_VALID(signal);
     @(posedge assert_intf.PCLK) !$isunknown(
         signal
     );
@@ -83,7 +83,7 @@ program apb_assertions (
   /*************************************************************************/
 
   // Check that if PENABLE is active, then the signals (PREADY, PSLVERR) are in a known state
-  property SLV_OUTPUT_SIGNAL_VALID(logic signal);
+  property SLV_OUTPUT_SIGNAL_VALID(signal);
     @(posedge assert_intf.PCLK) $rose(
         assert_intf.PENABLE
     ) |-> !$isunknown(
@@ -141,7 +141,7 @@ program apb_assertions (
   else
     $error("ERROR: PENABLE FAILED TO ASSERT EXACTLY 1 CC AFTER PSEL IS ASSERTED @ time=%0t", $time);
 
-  property PSEL_ASSERT_SIGNAL_STABLE(logic signal);
+  property PSEL_ASSERT_SIGNAL_STABLE(signal);
     @(posedge assert_intf.PCLK) ($onehot(
         assert_intf.PSEL
     ) |-> $stable(

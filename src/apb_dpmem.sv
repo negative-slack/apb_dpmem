@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-`ifndef APB_DP_MEM__SV
-`define APB_DP_MEM__SV 
+`ifndef APB_DPMEM__SV
+`define APB_DPMEM__SV 
 
-module apb_dp_mem
+module apb_dpmem
   import apb_pkg::*;
 (
     apb_if.slv_mp apb_slave
@@ -38,6 +38,8 @@ module apb_dp_mem
 
   localparam MEM_DEPTH = 1 << `APB_ADDR_WIDTH;
   data_t MEM[0:MEM_DEPTH-1];
+  localparam int unsigned NO_WRITE_LOW_ADDRESS = 0;
+  localparam int unsigned NO_WRITE_HIGH_ADDRESS = 15;
   // this generate blk only needed to dump sampled MEM as tmp regs to view them in the waveforms  
   generate
     genvar idx;
@@ -47,6 +49,7 @@ module apb_dp_mem
     end
   endgenerate
 
+  // present_state
   always_ff @(posedge apb_slave.PCLK or negedge apb_slave.PRESETn) begin
     if (!apb_slave.PRESETn) begin
       present_state <= IDLE;
@@ -55,6 +58,7 @@ module apb_dp_mem
     end
   end
 
+  // next_state
   always_comb begin
     case (present_state)
 
@@ -76,7 +80,7 @@ module apb_dp_mem
 
       ACCESS: begin
         if (apb_slave.PREADY) begin
-          if (apb_slave.PSEL) begin
+          if (apb_slave.PSEL && !apb_slave.PENABLE) begin
             next_state = SETUP;
           end else begin
             next_state = IDLE;
@@ -94,26 +98,36 @@ module apb_dp_mem
   end
 
   always_comb begin
-    apb_slave.PREADY  = 0;
-    apb_slave.PSLVERR = 0;
-    apb_slave.PRDATA  = '0;
-
     case (present_state)
+
       ACCESS: begin
-        if ((apb_slave.PADDR > 10'h0 && apb_slave.PADDR < 10'hf) && apb_slave.PWRITE) begin
+        if ((apb_slave.PADDR >= NO_WRITE_LOW_ADDRESS &&
+        apb_slave.PADDR <= NO_WRITE_HIGH_ADDRESS) &&
+        apb_slave.PWRITE) begin
+          $error(
+              "YOU ARE TRYING TO WRITE TO THE ADDRESS=0x%0h. \nADDRESSES FROM 0x0 till 0xf are READ ONLY",
+              apb_slave.PADDR);
           apb_slave.PREADY  = 1;
           apb_slave.PSLVERR = 1;
         end else if (apb_slave.PWRITE) begin
-          apb_slave.PREADY = (write_cnt == 0);
+          if (write_cnt == 0) begin
+            apb_slave.PREADY = 1;
+          end
         end else begin
-          if (apb_slave.PSEL) begin
-            apb_slave.PREADY = (read_cnt == 0);
-            apb_slave.PRDATA = (read_cnt == 0) ? MEM[apb_slave.PADDR] : '0;
+          if (read_cnt == 0) begin
+          apb_slave.PREADY = 1;
+          apb_slave.PRDATA = MEM[apb_slave.PADDR];
           end
         end
       end
-    endcase
 
+      default: begin
+        apb_slave.PREADY  = 0;
+        apb_slave.PSLVERR = 0;
+        apb_slave.PRDATA  = '0;
+      end
+
+    endcase
   end
 
   always_ff @(posedge apb_slave.PCLK or negedge apb_slave.PRESETn) begin
@@ -121,18 +135,16 @@ module apb_dp_mem
       write_cnt <= WRITE_LATENCY;
       read_cnt  <= READ_LATENCY;
     end else begin
+
       case (present_state)
+
         IDLE, SETUP: begin
           write_cnt <= WRITE_LATENCY;
           read_cnt  <= READ_LATENCY;
         end
 
         ACCESS: begin
-          if ((apb_slave.PADDR > 10'h0 && apb_slave.PADDR < 10'hf) && apb_slave.PWRITE) begin
-            $error("TRYING TO WRITE TO READ ONLY ADDRESS");
-            write_cnt <= WRITE_LATENCY;
-            read_cnt  <= READ_LATENCY;
-          end else if (apb_slave.PWRITE) begin
+          if (apb_slave.PWRITE) begin
             if (write_cnt != 0) begin
               write_cnt <= write_cnt - 1;
             end else begin
@@ -141,20 +153,19 @@ module apb_dp_mem
                   MEM[apb_slave.PADDR][(i*8)+:8] <= apb_slave.PWDATA[(i*8)+:8];
                 end
               end
-              write_cnt <= WRITE_LATENCY;
             end
-          end else begin
+          end 
+          else begin
             if (read_cnt != 0) begin
               read_cnt <= read_cnt - 1;
-            end else begin
-              read_cnt <= READ_LATENCY;
             end
           end
         end
+
       endcase
     end
   end
 
-endmodule : apb_dp_mem
+endmodule : apb_dpmem
 
 `endif

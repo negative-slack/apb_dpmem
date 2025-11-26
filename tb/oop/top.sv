@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 `include "../../src/apb_if.sv"
-`include "../../src/apb_dp_mem.sv"
+`include "../../src/apb_dpmem.sv"
 
 module top;
 
@@ -47,9 +47,9 @@ module top;
       .PRESETn(resetn)
   );
 
-  test t1 (.test_intf(top_intf));
+  Test t1 (.test_intf(top_intf));
 
-  apb_dp_mem dut (.apb_slave(top_intf.slv_mp));
+  apb_dpmem dut (.apb_slave(top_intf.slv_mp));
 
   bind apb_if apb_assertions apb_asserts_dut (.assert_intf(top_intf.monitor_mp));
 

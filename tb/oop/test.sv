@@ -27,7 +27,7 @@ program Test (
     apb_if test_intf
 );
 
-  environment env;
+  Environment env;
 
   initial begin
     env = new(test_intf);

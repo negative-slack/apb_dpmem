@@ -42,7 +42,7 @@ class Scoreboard;
       mon2scb_mbx.get(trans);
       trans.display("Scoreboard");
       if (trans.req.pwrite) begin
-        if (!(trans.req.paddr > 10'h0 && trans.req.paddr < 10'hf)) begin
+        if (!(trans.req.paddr >= 10'h0 && trans.req.paddr <= 10'hf)) begin
           for (int i = 0; i < `APB_STRB_WIDTH; i++) begin
             if (trans.req.pstrb[i]) begin
               scb_mem[trans.req.paddr][(i*8)+:8] = trans.req.pwdata[(i*8)+:8];

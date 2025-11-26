@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-`ifndef ENVIROMENT__SV
-`define ENVIROMENT__SV 
+`ifndef ENVIRONMENT__SV
+`define ENVIRONMENT__SV 
 
-class environment;
+class Environment;
 
   Generator      gen;
   Driver         dri;
@@ -69,6 +69,6 @@ class environment;
     $finish;
   endtask
 
-endclass : Enviroment
+endclass : Environment
 
 `endif

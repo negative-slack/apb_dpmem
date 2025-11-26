@@ -20,36 +20,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-`ifndef TEST__SV
-`define TEST__SV 
+`ifndef APB_DEFINE__SV
+`define APB_DEFINE__SV 
 
-program test (
-    apb_if test_intf
-);
+`ifndef APB_ADDR_WIDTH
+`define APB_ADDR_WIDTH 10
+`endif
 
-  environment env;
+`ifndef APB_DATA_WIDTH
+`define APB_DATA_WIDTH 32
+`endif
 
-  initial begin
-    env = new(test_intf);
-    initialize_memories();
-    env.main();
-  end
-
-  task initialize_memories();
-    automatic int seed = 123;
-    $display("Initializing the apb_slave and Scoreboard memories...");
-
-    for (int i = 0; i < dut.MEM_DEPTH; i++) begin
-      automatic data_t random_val = $random(seed);
-      dut.MEM[i] = random_val;
-      env.scb.scb_mem[i] = random_val;
-      $display("i=%0d\t APB_SLAVE_MEM=0x%0h\t SCB_MEM=0x%0h", i, dut.MEM[i], env.scb.scb_mem[i]);
-      assert (dut.MEM[i] == env.scb.scb_mem[i]);
-    end
-
-    $display("SUCCESS: Both memories initialized with identical values");
-  endtask
-
-endprogram
+`ifndef APB_STRB_WIDTH
+`define APB_STRB_WIDTH `APB_DATA_WIDTH / 8
+`endif
 
 `endif

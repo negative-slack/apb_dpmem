@@ -1,7 +1,7 @@
-`ifndef APB_TRANSACTION__SV
-`define APB_TRANSACTION__SV 
+`ifndef APB_SEQUENCE__SV
+`define APB_SEQUENCE__SV 
 
-class apb_transaction extends uvm_sequence_item;
+class apb_sequence extends uvm_sequence_item;
 
   rand logic PRESETn;
   rand apb_req_t req;
@@ -12,7 +12,7 @@ class apb_transaction extends uvm_sequence_item;
   rand int one_hot_index;
   rand int start_position;
 
-  `uvm_object_utils_begin(apb_transaction)
+  `uvm_object_utils_begin(apb_sequence)
     `uvm_field_int(PRESETn, UVM_ALL_ON)
     `uvm_field_int(req, UVM_ALL_ON)
     `uvm_field_int(rsp, UVM_ALL_ON)

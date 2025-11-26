@@ -1,39 +1,54 @@
-/********************************************
- *  Copyright (c) 2025 
- *  Author: negative-slack (Nader Alnatsheh).
- *  All rights reserved.
- *******************************************/
+// MIT License
+
+// Copyright (c) 2025 negative-slack (Nader Alnatsheh)
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 `ifndef APB_PKG__SV
 `define APB_PKG__SV 
 
+`include "apb_define.sv"
+
 package apb_pkg;
 
-  localparam int ADDR_WIDTH = 10;  //1024 words
-  localparam int DATA_WIDTH = 32;
-  localparam int STRB_WIDTH = DATA_WIDTH / 8;
-
-  typedef logic [ADDR_WIDTH-1:0] addr_t;
-  typedef logic [DATA_WIDTH-1:0] data_t;
-  typedef logic [STRB_WIDTH-1:0] strb_t;
+  typedef logic [`APB_ADDR_WIDTH-1:0] addr_t;
+  typedef logic [`APB_DATA_WIDTH-1:0] data_t;
+  typedef logic [`APB_STRB_WIDTH-1:0] strb_t;
 
   typedef enum bit [1:0] {
     IDLE,
     SETUP,
     ACCESS
-  } apb_state_t;
+  } apb_fsm_enum;
 
   typedef struct packed {
+    bit PRESETn;
     addr_t paddr;
-    strb_t pstrb;
-    logic  pwrite;
+    logic pwrite;
     data_t pwdata;
+    strb_t pstrb;
   } apb_req_t;
 
   typedef struct packed {
-    logic  pslverr;
     logic  pready;
     data_t prdata;
+    logic  pslverr;
   } apb_rsp_t;
 
 endpackage : apb_pkg

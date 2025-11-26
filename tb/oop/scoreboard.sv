@@ -1,8 +1,24 @@
-/********************************************
- *  Copyright (c) 2025 
- *  Author: negative-slack (Nader Alnatsheh).
- *  All rights reserved.
- *******************************************/
+// MIT License
+
+// Copyright (c) 2025 negative-slack (Nader Alnatsheh)
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 `ifndef SCOREBOARD__SV
 `define SCOREBOARD__SV 
@@ -12,7 +28,7 @@ class Scoreboard;
   Transaction trans;
   mailbox mon2scb_mbx;
 
-  localparam MEM_DEPTH = 1 << ADDR_WIDTH;
+  localparam MEM_DEPTH = 1 << `APB_ADDR_WIDTH;
   data_t scb_mem[0:MEM_DEPTH-1];
 
   int read_match_cnt;
@@ -27,7 +43,7 @@ class Scoreboard;
       trans.display("Scoreboard");
       if (trans.req.pwrite) begin
         if (!(trans.req.paddr > 10'h0 && trans.req.paddr < 10'hf)) begin
-          for (int i = 0; i < STRB_WIDTH; i++) begin
+          for (int i = 0; i < `APB_STRB_WIDTH; i++) begin
             if (trans.req.pstrb[i]) begin
               scb_mem[trans.req.paddr][(i*8)+:8] = trans.req.pwdata[(i*8)+:8];
             end

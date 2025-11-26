@@ -1,8 +1,24 @@
-/********************************************
- *  Copyright (c) 2025 
- *  Author: negative-slack (Nader Alnatsheh).
- *  All rights reserved.
- *******************************************/
+// MIT License
+
+// Copyright (c) 2025 negative-slack (Nader Alnatsheh)
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 `ifndef APB_IF__SV
 `define APB_IF__SV 
@@ -10,49 +26,50 @@
 interface apb_if
   import apb_pkg::*;
 (
-    input bit PCLK  // system clk
+    input bit PCLK,    // system clk
+    input bit PRESETn  // system reset negative
 );
 
-  bit PRESETn;  // reset negative
-
-  // mst output
-  logic PSEL;  // slave select
+  // mst output (a master example is an AHB2APB bridge)
+  // below are called the control signals of the transaction
+  logic PSEL;  // slave select, when asserted indicates the start of the transaction
+  logic PENABLE;  // low indicates the first cycle of the transaction, and must be 1 which indicates the 2nd/subsequent cycle of the apb protocol
   addr_t PADDR;  // address to write to or read from
-  strb_t PSTRB;  // write strobe; indicates which byte lane to update during a write transaction (16 diff choice)
-  logic PWRITE;  // 0: read, 1: write 
+  logic PWRITE;  // 0: read, 1: write
+  // below signals only valid when PWRITE is asserted for a write transaction
   data_t PWDATA;  // write data value
-  logic PENABLE;  // 2nd/subsequent cycle of the apb protocol
+  strb_t PSTRB;  // write strobe; indicates which byte lane to update during a write transaction (16 diff choice)
 
   // slv output
-  logic PSLVERR;
   logic PREADY;
   data_t PRDATA;
+  logic PSLVERR;
 
   clocking driver_cb @(posedge PCLK);
     // default input #1step output #1ns;
-    input PSLVERR, PREADY, PRDATA;
-    output PRESETn, PSEL, PADDR, PSTRB, PWRITE, PWDATA, PENABLE;
+    input PREADY, PRDATA, PSLVERR;
+    output PRESETn, PSEL, PADDR, PWRITE, PWDATA, PSTRB, PENABLE;
   endclocking
 
   clocking monitor_cb @(posedge PCLK);
     // default input #1step;
-    input PRESETn, PSEL, PADDR, PSTRB, PWRITE, PWDATA, PENABLE, PSLVERR, PREADY, PRDATA;
+    input PRESETn, PSEL, PADDR, PWRITE, PWDATA, PSTRB, PENABLE, PREADY, PRDATA, PSLVERR;
   endclocking
 
   // use for synthesis
   modport slv_mp(
-      input PCLK, PRESETn, PSEL, PADDR, PSTRB, PWRITE, PWDATA, PENABLE,
-      output PSLVERR, PREADY, PRDATA
+      input PCLK, PRESETn, PSEL, PADDR, PWRITE, PWDATA, PSTRB, PENABLE,
+      output PREADY, PRDATA, PSLVERR
   );
 
   modport mst_mp(
-      output PRESETn, PSEL, PADDR, PSTRB, PWRITE, PWDATA, PENABLE,
-      input PCLK, PSLVERR, PREADY, PRDATA
+      output PSEL, PADDR, PWRITE, PWDATA, PSTRB, PENABLE,
+      input PCLK, PRESETn, PREADY, PRDATA, PSLVERR
   );
 
   // use for assertions (bind in the top class)
   modport monitor_mp(
-      input PCLK, PRESETn, PSEL, PADDR, PSTRB, PWRITE, PWDATA, PENABLE, PSLVERR, PREADY, PRDATA
+      input PCLK, PRESETn, PSEL, PADDR, PWRITE, PWDATA, PSTRB, PENABLE, PREADY, PRDATA, PSLVERR
   );
 
   // use for verification

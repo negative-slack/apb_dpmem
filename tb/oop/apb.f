@@ -1,3 +1,4 @@
+../../src/apb_define.sv
 ../../src/apb_pkg.sv
 ../../src/apb_if.sv
 ../../src/apb_dp_mem.sv

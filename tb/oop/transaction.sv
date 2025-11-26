@@ -1,8 +1,24 @@
-/********************************************
- *  Copyright (c) 2025 
- *  Author: negative-slack (Nader Alnatsheh).
- *  All rights reserved.
- *******************************************/
+// MIT License
+
+// Copyright (c) 2025 negative-slack (Nader Alnatsheh)
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 `ifndef TRANSACTION__SV
 `define TRANSACTION__SV 
@@ -11,7 +27,7 @@ import apb_pkg::*;
 
 class Transaction;
 
-  rand logic PRESETn;
+  // rand logic PRESETn;
   rand apb_req_t req;
   apb_rsp_t rsp;
   rand logic back_to_back_xfers;
@@ -20,13 +36,13 @@ class Transaction;
   rand int one_hot_index;
   rand int start_position;
 
-  // constraint to generate only one hot state values for the paddr
+  // // constraint to generate only one hot state values for the paddr
   constraint paddr_one_hot_index {
     one_hot_index inside {[0 : 9]};
     req.paddr == 1 << one_hot_index;
   }
 
-  // // constraint to generate a paddr value which has binary all 1s grouped together 
+  // constraint to generate a paddr value which has binary all 1s grouped together 
   // constraint paddr_all_1s_grouped_together {
   //   one_hot_index inside {[1 : 10]};
   //   start_position inside {[0 : 9]};
@@ -35,7 +51,7 @@ class Transaction;
 
   // constraint to distribute the presetn 
   constraint presetn_dist_c {
-    PRESETn dist {
+    req.PRESETn dist {
       0 :/ 2,  // 2% (it actually appeared 22 times)
       1 :/ 98  // 98% (it actually appeared 978 times)
     };
@@ -75,8 +91,9 @@ class Transaction;
     $display("- %s", module_name);
     $display("-------------------------");
     $display(
-        "t=%0.3f ns, PADDR=%0h, PSTRB=%0b, PWRITE=%0b, PWDATA=%0h, back_to_back_xfers=%0b, idle_cycles=%0d",  //
-        $time, req.paddr, req.pstrb, req.pwrite, req.pwdata, back_to_back_xfers, idle_cycles);
+        "t=%0.3f ns, PRESETn=%0b, PADDR=%0h, PSTRB=%0b, PWRITE=%0b, PWDATA=%0h, back_to_back_xfers=%0b, idle_cycles=%0d",  //
+        $time, req.PRESETn, req.paddr, req.pstrb, req.pwrite, req.pwdata, back_to_back_xfers,
+        idle_cycles);
   endfunction : display
 
 endclass : Transaction

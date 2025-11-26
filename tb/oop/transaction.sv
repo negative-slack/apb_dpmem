@@ -36,13 +36,15 @@ class Transaction;
   rand int one_hot_index;
   rand int start_position;
 
-  // // constraint to generate only one hot state values for the paddr
+  // constraint to generate only one hot state values for the paddr
+  // as an e.g. ; 0x1, 0x2, 0x4, 0x8, 0x10, 0x20, 0x40, 0,80, 0x100
   constraint paddr_one_hot_index {
     one_hot_index inside {[0 : 9]};
     req.paddr == 1 << one_hot_index;
   }
 
   // constraint to generate a paddr value which has binary all 1s grouped together 
+  // as an e.g, 00_1111_1000, 00_0011_1110, etc . . .
   // constraint paddr_all_1s_grouped_together {
   //   one_hot_index inside {[1 : 10]};
   //   start_position inside {[0 : 9]};
@@ -55,6 +57,12 @@ class Transaction;
       0 :/ 2,  // 2% (it actually appeared 22 times)
       1 :/ 98  // 98% (it actually appeared 978 times)
     };
+
+    // req.PRESETn dist {
+    //   0 := 20,  // 20/1000 
+    //   1 := 980  // 980/1000 
+    // };
+
   }
 
   // constraint to distribute the pwrite 

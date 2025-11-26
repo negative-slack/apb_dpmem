@@ -53,4 +53,4 @@ module top;
 
   bind apb_if apb_assertions apb_asserts_dut (.assert_intf(top_intf.monitor_mp));
 
-endmodule
+endmodule : top

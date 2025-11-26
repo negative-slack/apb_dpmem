@@ -23,7 +23,7 @@
 `ifndef TEST__SV
 `define TEST__SV 
 
-program test (
+program Test (
     apb_if test_intf
 );
 
@@ -50,6 +50,6 @@ program test (
     $display("SUCCESS: Both memories initialized with identical values");
   endtask
 
-endprogram
+endprogram : Test
 
 `endif

@@ -69,6 +69,6 @@ class environment;
     $finish;
   endtask
 
-endclass
+endclass : Enviroment
 
 `endif

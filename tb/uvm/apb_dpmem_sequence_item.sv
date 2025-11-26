@@ -1,7 +1,7 @@
-`ifndef APB_SEQUENCE__SV
-`define APB_SEQUENCE__SV 
+`ifndef APB_DP_MEM_SEQUENCE__SV
+`define APB_DP_MEM_SEQUENCE__SV 
 
-class apb_sequence extends uvm_sequence_item;
+class apb_dpmem_sequence_item extends uvm_sequence_item;
 
   rand logic PRESETn;
   rand apb_req_t req;
@@ -12,7 +12,7 @@ class apb_sequence extends uvm_sequence_item;
   rand int one_hot_index;
   rand int start_position;
 
-  `uvm_object_utils_begin(apb_sequence)
+  `uvm_object_utils_begin(apb_dpmem_sequence_item)
     `uvm_field_int(PRESETn, UVM_ALL_ON)
     `uvm_field_int(req, UVM_ALL_ON)
     `uvm_field_int(rsp, UVM_ALL_ON)
@@ -20,13 +20,17 @@ class apb_sequence extends uvm_sequence_item;
     `uvm_field_int(idle_cycles, UVM_ALL_ON)
   `uvm_object_utils_end
 
+  function new(string name = "");
+    super.new(name);
+  endfunction
+
   // constraint to generate only one hot state values for the paddr
   constraint paddr_one_hot_index {
     one_hot_index inside {[0 : 9]};
     req.paddr == 1 << one_hot_index;
   }
 
-  // // constraint to generate a paddr value which has binary all 1s grouped together 
+  // constraint to generate a paddr value which has binary all 1s grouped together 
   // constraint paddr_all_1s_grouped_together {
   //   one_hot_index inside {[1 : 10]};
   //   start_position inside {[0 : 9]};
@@ -69,10 +73,6 @@ class apb_sequence extends uvm_sequence_item;
       1 :/ 80
     };
   }
-
-  function new(string name = "");
-    super.new(name);
-  endfunction
 
 endclass
 

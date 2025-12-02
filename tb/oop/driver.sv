@@ -74,7 +74,7 @@ class Driver;
     `DRI.PENABLE <= 1;  // high
   endtask
 
-  task drive_b2b_xfers(input addr_t paddr, strb_t pstrb, logic pwrite, data_t pwdata);
+  task drive_b2b_tnxs(input addr_t paddr, strb_t pstrb, logic pwrite, data_t pwdata);
 
     setup_state(paddr, pstrb, pwrite, pwdata);
     cycle();
@@ -84,7 +84,7 @@ class Driver;
 
   endtask
 
-  task drive_xfers_w_idle(input addr_t paddr, strb_t pstrb, logic pwrite, data_t pwdata);
+  task drive_tnxs_w_idle(input addr_t paddr, strb_t pstrb, logic pwrite, data_t pwdata);
     if (trans.idle_cycles > 0) begin
       repeat (trans.idle_cycles) begin
         idle_state();
@@ -114,10 +114,10 @@ class Driver;
 
     if (!trans.req.PRESETn) begin
       resetn();
-    end else if (!trans.back_to_back_xfers) begin
-      drive_xfers_w_idle(trans.req.paddr, trans.req.pstrb, trans.req.pwrite, trans.req.pwdata);
+    end else if (!trans.b2b_tnxs) begin
+      drive_tnxs_w_idle(trans.req.paddr, trans.req.pstrb, trans.req.pwrite, trans.req.pwdata);
     end else begin
-      drive_b2b_xfers(trans.req.paddr, trans.req.pstrb, trans.req.pwrite, trans.req.pwdata);
+      drive_b2b_tnxs(trans.req.paddr, trans.req.pstrb, trans.req.pwrite, trans.req.pwdata);
     end
   endtask
 

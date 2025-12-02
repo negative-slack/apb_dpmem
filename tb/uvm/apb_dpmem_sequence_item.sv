@@ -6,7 +6,7 @@ class apb_dpmem_sequence_item extends uvm_sequence_item;
   rand logic PRESETn;
   rand apb_req_t req;
   apb_rsp_t rsp;
-  rand logic back_to_back_xfers;
+  rand logic b2b_tnxs;
   rand int unsigned idle_cycles;
 
   rand int one_hot_index;
@@ -16,7 +16,7 @@ class apb_dpmem_sequence_item extends uvm_sequence_item;
     `uvm_field_int(PRESETn, UVM_ALL_ON)
     `uvm_field_int(req, UVM_ALL_ON)
     `uvm_field_int(rsp, UVM_ALL_ON)
-    `uvm_field_int(back_to_back_xfers, UVM_ALL_ON)
+    `uvm_field_int(b2b_tnxs, UVM_ALL_ON)
     `uvm_field_int(idle_cycles, UVM_ALL_ON)
   `uvm_object_utils_end
 
@@ -65,10 +65,10 @@ class apb_dpmem_sequence_item extends uvm_sequence_item;
   constraint idle_cycles_c {idle_cycles inside {[0 : 5]};}
 
   // constraint to set the # of idle cycles to 0, when it is a b2b transactions ! 
-  constraint b2b_psel_c {(back_to_back_xfers == 1) -> (idle_cycles == 0);}
+  constraint b2b_psel_c {(b2b_tnxs == 1) -> (idle_cycles == 0);}
 
   constraint b2b_idle_dist {
-    back_to_back_xfers dist {
+    b2b_tnxs dist {
       0 :/ 20,
       1 :/ 80
     };

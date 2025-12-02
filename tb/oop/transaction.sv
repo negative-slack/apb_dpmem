@@ -30,14 +30,16 @@ class Transaction;
   // rand logic PRESETn;
   rand apb_req_t req;
   apb_rsp_t rsp;
-  rand logic back_to_back_xfers;
-  rand int unsigned idle_cycles;
+  rand bit b2b_tnxs;  // 0: no b2b_tnxs, 1: there is a b2b_tnxs
+  rand int unsigned idle_cycles;  // if b2b_txns is asseted, the # of idle_cycles = 0
 
+  // below varaibles only help to constraint the paddr 
   rand int one_hot_index;
   rand int start_position;
 
   // constraint to generate only one hot state values for the paddr
   // as an e.g. ; 0x1, 0x2, 0x4, 0x8, 0x10, 0x20, 0x40, 0,80, 0x100
+  // I was asked this by a broadcom engineer lol !
   constraint paddr_one_hot_index {
     one_hot_index inside {[0 : 9]};
     req.paddr == 1 << one_hot_index;
@@ -81,14 +83,17 @@ class Transaction;
   // For read transfers, the Requester must drive all bits of PSTRB LOW.
   constraint pwrite_pstrb_c {(req.pwrite == 0) -> (req.pstrb == 0);}
 
+  // constraint for pstrb to never be 0 when pwrite is 1
+  constraint pstrb_pwrite_c {(req.pwrite == 1) -> (req.pstrb != 0);}
+
   // constraint to choose the number of idle_cycles between 1 - 5
   constraint idle_cycles_c {idle_cycles inside {[0 : 5]};}
 
   // constraint to set the # of idle cycles to 0, when it is a b2b transactions ! 
-  constraint b2b_psel_c {(back_to_back_xfers == 1) -> (idle_cycles == 0);}
+  constraint b2b_idle_cycles_c {(b2b_tnxs == 1) -> (idle_cycles == 0);}
 
   constraint b2b_idle_dist {
-    back_to_back_xfers dist {
+    b2b_tnxs dist {
       0 :/ 20,
       1 :/ 80
     };
@@ -99,9 +104,8 @@ class Transaction;
     $display("- %s", module_name);
     $display("-------------------------");
     $display(
-        "t=%0.3f ns, PRESETn=%0b, PADDR=%0h, PSTRB=%0b, PWRITE=%0b, PWDATA=%0h, back_to_back_xfers=%0b, idle_cycles=%0d",  //
-        $time, req.PRESETn, req.paddr, req.pstrb, req.pwrite, req.pwdata, back_to_back_xfers,
-        idle_cycles);
+        "t=%0.3f ns, PRESETn=%0b, PADDR=%0h, PSTRB=%0b, PWRITE=%0b, PWDATA=%0h, b2b_tnxs=%0b, idle_cycles=%0d",  //
+        $time, req.PRESETn, req.paddr, req.pstrb, req.pwrite, req.pwdata, b2b_tnxs, idle_cycles);
   endfunction : display
 
 endclass : Transaction

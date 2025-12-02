@@ -31,7 +31,7 @@ class apb_coverage;
 
     // presetn coverage
     presetn_cp: coverpoint cov_intf.PRESETn {
-      bins presetn_0_1 = (0 => 1); bins presetn_1 = {1};
+      bins presetn_0 = {0}; bins presetn_1 = {1};
     }
 
     // address range coverage

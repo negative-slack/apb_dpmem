@@ -46,14 +46,16 @@ class Monitor;
         trans = new();
 
         trans.req.paddr = `MON.PADDR;
-        trans.req.pstrb = `MON.PSTRB;
         trans.req.pwrite = `MON.PWRITE;
         if (trans.req.pwrite) begin
           trans.req.pwdata = `MON.PWDATA;
         end else begin
           trans.rsp.prdata = `MON.PRDATA;
         end
-        trans.rsp.pready = `MON.PREADY;
+        trans.req.pstrb   = `MON.PSTRB;
+        trans.rsp.pready  = `MON.PREADY;
+        trans.rsp.pslverr = `MON.PSLVERR;
+        
         trans.display("MONITOR");
         mon2scb_mbx.put(trans);
       end

@@ -36,6 +36,7 @@ class Environment;
 
   event          gen_ended;
   event          dri_ended;
+  event          scb_ended;
 
   virtual apb_if vif;
 
@@ -46,7 +47,7 @@ class Environment;
     gen       = new(gen2dri_t, gen_ended);
     dri       = new(vif, gen2dri_t, dri_ended);
     mon       = new(vif, mon2scb_t);
-    scb       = new(mon2scb_t);
+    scb       = new(mon2scb_t, scb_ended);
     cvg       = new(vif);
   endfunction
 
@@ -62,12 +63,12 @@ class Environment;
     @(dri_ended);
 
     disable fork;
-  endtask
+  endtask : run
 
   task main;
     run();
     $finish;
-  endtask
+  endtask : main
 
 endclass : Environment
 

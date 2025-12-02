@@ -115,16 +115,16 @@ module apb_dpmem
           end
         end else begin
           if (read_cnt == 0) begin
-          apb_slave.PREADY = 1;
-          apb_slave.PRDATA = MEM[apb_slave.PADDR];
+            apb_slave.PREADY = 1;
+            apb_slave.PRDATA = MEM[apb_slave.PADDR];  // read now
           end
         end
       end
 
       default: begin
         apb_slave.PREADY  = 0;
-        apb_slave.PSLVERR = 0;
         apb_slave.PRDATA  = '0;
+        apb_slave.PSLVERR = 0;
       end
 
     endcase
@@ -150,12 +150,11 @@ module apb_dpmem
             end else begin
               for (int i = 0; i < `APB_STRB_WIDTH; i++) begin
                 if (apb_slave.PSTRB[i]) begin
-                  MEM[apb_slave.PADDR][(i*8)+:8] <= apb_slave.PWDATA[(i*8)+:8];
+                  MEM[apb_slave.PADDR][(i*8)+:8] <= apb_slave.PWDATA[(i*8)+:8];  // write now
                 end
               end
             end
-          end 
-          else begin
+          end else begin
             if (read_cnt != 0) begin
               read_cnt <= read_cnt - 1;
             end

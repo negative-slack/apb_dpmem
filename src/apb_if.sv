@@ -30,17 +30,17 @@ interface apb_if
     input bit PRESETn  // system reset negative
 );
 
-  // mst output (a master example is an AHB2APB bridge)
-  // below are called the control signals of the transaction
+  // mst output signals : (a master example is an AHB2APB bridge)
+  // below are the control signals of a single transaction
   logic PSEL;  // slave select, when asserted indicates the start of the transaction
   logic PENABLE;  // low indicates the first cycle of the transaction, and must be 1 which indicates the 2nd/subsequent cycle of the apb protocol
   addr_t PADDR;  // address to write to or read from
   logic PWRITE;  // 0: read, 1: write
-  // below signals only valid when PWRITE is asserted for a write transaction
+  // below signals are only valid when PWRITE is asserted for a write transaction
   data_t PWDATA;  // write data value
   strb_t PSTRB;  // write strobe; indicates which byte lane to update during a write transaction (16 diff choice)
 
-  // slv output
+  // slv output signals
   logic PREADY;
   data_t PRDATA;
   logic PSLVERR;

@@ -27,18 +27,20 @@ class Scoreboard;
 
   Transaction trans;
   mailbox mon2scb_mbx;
+  event scb_ended;
 
   localparam MEM_DEPTH = 1 << `APB_ADDR_WIDTH;
   data_t scb_mem[0:MEM_DEPTH-1];
 
   int read_match_cnt;
 
-  function new(mailbox mon2scb_mbx);
+  function new(mailbox mon2scb_mbx, event scb_ended);
     this.mon2scb_mbx = mon2scb_mbx;
+    this.scb_ended   = scb_ended;
   endfunction
 
   task run();
-    forever begin
+    for (int i = 0; i < Generator::num_trans; ++i) begin
       mon2scb_mbx.get(trans);
       trans.display("Scoreboard");
       if (trans.req.pwrite) begin
@@ -64,6 +66,7 @@ class Scoreboard;
         end
       end
     end
+    ->scb_ended;
   endtask : run
 
 endclass : Scoreboard

@@ -100,6 +100,7 @@ class Transaction;
   }
 
   function void display(string module_name);
+    $display("");
     $display("-------------------------");
     $display("- %s", module_name);
     $display("-------------------------");

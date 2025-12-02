@@ -46,9 +46,11 @@ class Generator;
                i + 1, num_trans);
       gen2dri_mbx.put(trans);
     end
+    $display("");
     $display("---------------------------------------------------------------------------");
     $display("t = %0t [Generator] Done generation of %0d items", $time, num_trans);
     $display("---------------------------------------------------------------------------");
+    $display("");
     ->gen_ended;
   endtask : run
 

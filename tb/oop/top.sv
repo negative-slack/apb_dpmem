@@ -51,6 +51,6 @@ module top;
 
   apb_dpmem dut (.apb_slave(top_intf.slv_mp));
 
-  bind apb_if apb_assertions apb_asserts_dut (.assert_intf(top_intf.monitor_mp));
+  bind apb_dpmem apb_assertions apb_asserts_dut (.assert_intf(top_intf.monitor_mp));
 
 endmodule : top

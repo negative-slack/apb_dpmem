@@ -104,6 +104,7 @@ module apb_dpmem
         if ((apb_slave.PADDR >= NO_WRITE_LOW_ADDRESS &&
         apb_slave.PADDR <= NO_WRITE_HIGH_ADDRESS) &&
         apb_slave.PWRITE) begin
+          $display("");
           $error(
               "YOU ARE TRYING TO WRITE TO THE ADDRESS=0x%0h. \nADDRESSES FROM 0x0 till 0xf are READ ONLY",
               apb_slave.PADDR);

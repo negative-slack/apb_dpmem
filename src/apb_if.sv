@@ -45,17 +45,6 @@ interface apb_if
   data_t PRDATA;
   logic PSLVERR;
 
-  clocking driver_cb @(posedge PCLK);
-    // default input #1step output #1ns;
-    input PREADY, PRDATA, PSLVERR;
-    output PRESETn, PSEL, PADDR, PWRITE, PWDATA, PSTRB, PENABLE;
-  endclocking
-
-  clocking monitor_cb @(posedge PCLK);
-    // default input #1step;
-    input PRESETn, PSEL, PADDR, PWRITE, PWDATA, PSTRB, PENABLE, PREADY, PRDATA, PSLVERR;
-  endclocking
-
   // use for synthesis
   modport slv_mp(
       input PCLK, PRESETn, PSEL, PADDR, PWRITE, PWDATA, PSTRB, PENABLE,
@@ -71,6 +60,17 @@ interface apb_if
   modport monitor_mp(
       input PCLK, PRESETn, PSEL, PADDR, PWRITE, PWDATA, PSTRB, PENABLE, PREADY, PRDATA, PSLVERR
   );
+
+  clocking driver_cb @(posedge PCLK);
+    // default input #1step output #1ns;
+    input PREADY, PRDATA, PSLVERR;
+    output PRESETn, PSEL, PADDR, PWRITE, PWDATA, PSTRB, PENABLE;
+  endclocking
+
+  clocking monitor_cb @(posedge PCLK);
+    // default input #1step;
+    input PRESETn, PSEL, PADDR, PWRITE, PWDATA, PSTRB, PENABLE, PREADY, PRDATA, PSLVERR;
+  endclocking
 
   // use for verification
   modport driver_dv(clocking driver_cb);

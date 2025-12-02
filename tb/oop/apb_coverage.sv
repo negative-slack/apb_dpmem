@@ -93,6 +93,16 @@ class apb_coverage;
       bins no_error = {0}; bins error = {1};
     }
 
+    cross_pwrite_pstrb_cp : cross pwrite_cp, pstrb_cp{
+      bins pwrite_zero = binsof (pwrite_cp.write) && binsof (pstrb_cp.zero);
+      bins pwrite_one = binsof (pwrite_cp.write) && binsof (pstrb_cp.one);
+      bins pwrite_two = binsof (pwrite_cp.write) && binsof (pstrb_cp.two);
+      bins pwrite_three = binsof (pwrite_cp.write) && binsof (pstrb_cp.three);
+      bins pwrite_four = binsof (pwrite_cp.write) && binsof (pstrb_cp.four);
+
+      ignore_bins others = !binsof (pwrite_cp.write);
+    }
+
   endgroup
 
   function new(virtual apb_if cov_intf);

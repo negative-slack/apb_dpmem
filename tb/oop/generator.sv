@@ -29,7 +29,7 @@ class Generator;
   mailbox gen2dri_mbx;
   event gen_ended;
 
-  static int num_trans = 1000;
+  static int num_tnxs = 1000;
 
   function new(mailbox gen2dri_mbx, event gen_ended);
     this.gen2dri_mbx = gen2dri_mbx;
@@ -37,19 +37,20 @@ class Generator;
   endfunction
 
   task run();
-    for (int i = 0; i < num_trans; i++) begin
+    for (int i = 0; i < num_tnxs; i++) begin
       trans = new();
       assert (trans.randomize())
-      else $error("Transaction:%0d/%0d is not randomized", i + 1, num_trans);
+      else $error("Transaction:%0d/%0d is not randomized", i + 1, num_tnxs);
       trans.display("Generator");
       $display("The Generator created the Transaction:%0d/%0d as above",  // 
-               i + 1, num_trans);
+               i + 1, num_tnxs);
       gen2dri_mbx.put(trans);
     end
     $display("");
-    $display("/**************************************************/");
-    $display("t = %0t [Generator] Done generation of %0d items", $time, num_trans);
-    $display("/**************************************************/");
+    $display("/**********************************************************************/");
+    $display("@ time = %0t, the Generator has finished the generation of %0d items", $time,
+             num_tnxs);
+    $display("/**********************************************************************/");
     $display("");
     ->gen_ended;
   endtask : run

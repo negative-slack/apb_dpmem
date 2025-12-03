@@ -40,9 +40,9 @@ class Scoreboard;
   endfunction
 
   task run();
-    for (int i = 0; i < Generator::num_trans; ++i) begin
+    for (int i = 0; i < Generator::num_tnxs; ++i) begin
       mon2scb_mbx.get(trans);
-      trans.display("Scoreboard");
+      trans.display("SCOREBOARD");
       if (trans.req.pwrite) begin
         if (!(trans.req.paddr >= 10'h0 && trans.req.paddr <= 10'hf)) begin
           for (int i = 0; i < `APB_STRB_WIDTH; i++) begin

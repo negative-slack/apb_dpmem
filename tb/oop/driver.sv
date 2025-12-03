@@ -122,7 +122,7 @@ class Driver;
   endtask
 
   task run();
-    for (int i = 0; i < Generator::num_trans; i++) begin
+    for (int i = 0; i < Generator::num_tnxs; i++) begin
       gen2dri_mbx.get(trans);
       drive();
       trans.display("DRIVER");

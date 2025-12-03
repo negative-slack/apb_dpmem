@@ -56,11 +56,7 @@ interface apb_if
       input PCLK, PRESETn, PREADY, PRDATA, PSLVERR
   );
 
-  // use for assertions (bind in the top class)
-  modport monitor_mp(
-      input PCLK, PRESETn, PSEL, PADDR, PWRITE, PWDATA, PSTRB, PENABLE, PREADY, PRDATA, PSLVERR
-  );
-
+  //use for verification
   clocking driver_cb @(posedge PCLK);
     // default input #1step output #1ns;
     input PREADY, PRDATA, PSLVERR;
@@ -72,9 +68,13 @@ interface apb_if
     input PRESETn, PSEL, PADDR, PWRITE, PWDATA, PSTRB, PENABLE, PREADY, PRDATA, PSLVERR;
   endclocking
 
-  // use for verification
   modport driver_dv(clocking driver_cb);
   modport monitor_dv(clocking monitor_cb);
+
+  // use for assertions (bind in the top class)
+  modport sva_mp(
+      input PCLK, PRESETn, PSEL, PADDR, PWRITE, PWDATA, PSTRB, PENABLE, PREADY, PRDATA, PSLVERR
+  );
 
 endinterface : apb_if
 

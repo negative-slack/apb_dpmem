@@ -24,7 +24,7 @@
 `define APB_ASSERTIONS__SV 
 
 module apb_assertions (
-    apb_if.monitor_mp assert_intf
+    apb_if.sva_mp assert_intf
 );
 
   // property to check that the (PRESETn, PSEL) signals are always in a known state

@@ -1,5 +1,5 @@
 $date
-   Tue Dec  2 15:10:03 2025
+   Tue Dec  2 23:10:13 2025
 $end
 
 $version
@@ -52,7 +52,11 @@ $var reg 1 ) PREADY $end
 $var reg 32 * PRDATA $end
 $var reg 1 + PSLVERR $end
 $upscope $end
-$scope module monitor_mp $end
+$scope module driver_dv $end
+$upscope $end
+$scope module monitor_dv $end
+$upscope $end
+$scope module sva_mp $end
 $var reg 1 ! PCLK $end
 $var reg 1 " PRESETn $end
 $var reg 1 # PSEL $end
@@ -64,10 +68,6 @@ $var reg 1 $ PENABLE $end
 $var reg 1 ) PREADY $end
 $var reg 32 * PRDATA $end
 $var reg 1 + PSLVERR $end
-$upscope $end
-$scope module driver_dv $end
-$upscope $end
-$scope module monitor_dv $end
 $upscope $end
 $scope module driver_cb $end
 $var reg 1 , PREADY $end
@@ -133,7 +133,11 @@ $var reg 1 ) PREADY $end
 $var reg 32 * PRDATA $end
 $var reg 1 + PSLVERR $end
 $upscope $end
-$scope module monitor_mp $end
+$scope module driver_dv $end
+$upscope $end
+$scope module monitor_dv $end
+$upscope $end
+$scope module sva_mp $end
 $var reg 1 ! PCLK $end
 $var reg 1 " PRESETn $end
 $var reg 1 # PSEL $end
@@ -145,10 +149,6 @@ $var reg 1 $ PENABLE $end
 $var reg 1 ) PREADY $end
 $var reg 32 * PRDATA $end
 $var reg 1 + PSLVERR $end
-$upscope $end
-$scope module driver_dv $end
-$upscope $end
-$scope module monitor_dv $end
 $upscope $end
 $scope module driver_cb $end
 $var reg 1 , PREADY $end

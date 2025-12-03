@@ -38,7 +38,7 @@ package apb_pkg;
   } apb_fsm_enum;
 
   typedef struct packed {
-    bit PRESETn;
+    bit PRESETn; // must always be in a known state; hence the bit type
     addr_t paddr;
     logic pwrite;
     data_t pwdata;

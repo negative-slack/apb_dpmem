@@ -52,6 +52,7 @@ class Environment;
   endfunction
 
   task run();
+  
     fork
       gen.run();
       dri.run();
@@ -62,7 +63,6 @@ class Environment;
 
     @(dri_ended);
 
-    disable fork;
   endtask : run
 
   task main;

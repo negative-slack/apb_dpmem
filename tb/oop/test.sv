@@ -38,11 +38,13 @@ program Test (
   task initialize_memories();
     automatic int seed = 123;
     $display("Initializing the APB_DPMEM slave and Scoreboard memories");
+    $display("   i\t APB_DPMEM\t SCB_MEM");
+    $display("+-------------------------+");
     for (int i = 0; i < dut.MEM_DEPTH; i++) begin
       automatic data_t random_val = $random(seed);
       dut.MEM[i] = random_val;
       env.scb.scb_mem[i] = random_val;
-      $display("i=%0d\t APB_DPMEM=0x%0h\t SCB_MEM=0x%0h", i, dut.MEM[i], env.scb.scb_mem[i]);
+      $display("%4h\t 0x%8h\t 0x%8h", i, dut.MEM[i], env.scb.scb_mem[i]);
       assert (dut.MEM[i] == env.scb.scb_mem[i])
       else $error("INITIALIZATION ERROR");
     end

@@ -31,7 +31,7 @@ class Scoreboard;
 
   // define scoreboard memory
   localparam MEM_DEPTH = 1 << `APB_ADDR_WIDTH;
-  data_t scb_mem[0:MEM_DEPTH-1];
+  static data_t scb_mem[0:MEM_DEPTH-1];
 
   int scb_read_match_cnt;
 

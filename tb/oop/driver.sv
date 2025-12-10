@@ -84,7 +84,7 @@ class Driver;
   endtask
 
   task drive_tnxs_w_idle(input addr_t paddr, strb_t pstrb, logic pwrite, data_t pwdata);
-    if (trans.idle_cycles > 0) begin // idle cycle here anywhere between 1 and 5
+    if (trans.idle_cycles > 0) begin  // idle cycle here anywhere between 1 and 5
       repeat (trans.idle_cycles) begin
         idle_state();
         cycle();

@@ -38,7 +38,7 @@ class Generator;
 
   task run();
     for (int i = 0; i < num_tnxs; i++) begin
-      trans = new(); // allocate a new Transaction on each iteration
+      trans = new();  // allocate a new Transaction on each iteration
       assert (trans.randomize())
       else $error("Transaction:%0d/%0d is not randomized", i + 1, num_tnxs);
       trans.display("Generator");

@@ -109,13 +109,25 @@ class Transaction;
   }
 
   function void display(string module_name);
-    $display("");
-    $display("-------------------------");
-    $display("- %s", module_name);
-    $display("-------------------------");
-    $display(
-        "t=%0.3f ns, PRESETn=%0b, PADDR=%0h, PSTRB=%0b, PWRITE=%0b, PWDATA=%0h, b2b_tnxs=%0b, idle_cycles=%0d",  //
-        $time, req.PRESETn, req.paddr, req.pstrb, req.pwrite, req.pwdata, b2b_tnxs, idle_cycles);
+    if (module_name == "Generator" || module_name == "DRIVER") begin
+      $display("");
+      $display("-------------------------");
+      $display("- %s", module_name);
+      $display("-------------------------");
+      $display(
+          "t=%0.3f ns, \nPRESETn=%0b, PADDR=%0h, PWRITE=%0b, PWDATA=%0h, PSTRB=%0b, b2b_tnxs=%0b, idle_cycles=%0d",  //
+          $time, req.PRESETn, req.paddr, req.pwrite, req.pwdata, req.pstrb, b2b_tnxs, idle_cycles);
+    end else begin
+      $display("");
+      $display("-------------------------");
+      $display("- %s", module_name);
+      $display("-------------------------");
+      $display(
+          "t=%0.3f ns, \nINPUT SIGNALS: PRESETn=%0b, PADDR=0x%0h, PWRITE=%0b, PWDATA=0x%0h, PSTRB=%0b, \nOUTPUT SIGNLAS: PREADY=%0b, PRDATA=0x%0h, PSLVERR=%0b, DPMEM=0x%0h",  //
+          $time,  //
+          req.PRESETn, req.paddr, req.pwrite, req.pwdata, req.pstrb,  ///
+          rsp.pready, rsp.prdata, rsp.pslverr, top.dut.MEM[req.paddr]);
+    end
   endfunction : display
 
 endclass : Transaction

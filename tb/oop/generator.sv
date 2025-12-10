@@ -43,8 +43,8 @@ class Generator;
         $error("Transaction:%0d/%0d is not randomized", i + 1, num_tnxs);
       end else begin
         $display("");
-        $display("The Generator has created the Transaction:%0d/%0d as below successfully:",  // 
-                 i + 1, num_tnxs);
+        $display("The Generator has created the Transaction: (%0d) as below successfully:",  // 
+                 i + 1);
         trans.display("Generator");
         gen2dri_mbx.put(trans);
       end

@@ -31,7 +31,7 @@ class Scoreboard;
 
   // define scoreboard memory
   localparam MEM_DEPTH = 1 << `APB_ADDR_WIDTH;
-  static data_t scb_mem[0:MEM_DEPTH-1];
+  data_t scb_mem[0:MEM_DEPTH-1];
 
   int scb_read_match_cnt;
 
@@ -40,10 +40,19 @@ class Scoreboard;
     this.scb_ended   = scb_ended;
   endfunction
 
+  function void display(string module_name);
+    $display("");
+    $display("-------------------------");
+    $display("- %s", module_name);
+    $display("-------------------------");
+    $display("t=%0.3f ns \nADDRESS=0x%0h\nPWDATA=0x%0h, PSTRB=%0b, \nMEM BEFORE WRITE=0x%0h, \nMEM AFTER WRITE=0x%0h",  //
+             $time, trans.req.paddr, trans.req.pwdata, trans.req.pstrb, scb_mem[trans.req.paddr], top.dut.MEM[trans.req.paddr]);
+  endfunction
+
   task run();
     for (int i = 0; i < Generator::num_tnxs; ++i) begin
       mon2scb_mbx.get(trans);
-      trans.display("SCOREBOARD");
+      display("SCOREBOARD");
       if (trans.req.pwrite) begin
         if (!(trans.req.paddr >= 10'h0 && trans.req.paddr <= 10'hf)) begin
           for (int i = 0; i < `APB_STRB_WIDTH; i++) begin

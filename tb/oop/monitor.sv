@@ -27,7 +27,7 @@ class Monitor;
 
   virtual apb_if mon_intf;
   mailbox mon2scb_mbx;
-  
+
   Transaction trans;
 
   `define MON mon_intf.monitor_cb
@@ -49,13 +49,18 @@ class Monitor;
         trans.req.PRESETn = `MON.PRESETn;
         trans.req.paddr = `MON.PADDR;
         trans.req.pwrite = `MON.PWRITE;
-        if (trans.req.pwrite) begin
-          trans.req.pwdata = `MON.PWDATA;
-        end else begin
-          trans.rsp.prdata = `MON.PRDATA;
-        end
-        trans.req.pstrb   = `MON.PSTRB;
-        trans.rsp.pready  = `MON.PREADY;
+
+        trans.req.pwdata = `MON.PWDATA;
+
+        trans.rsp.prdata = `MON.PRDATA;
+
+        // if (trans.req.pwrite) begin
+        //   trans.req.pwdata = `MON.PWDATA;
+        // end else begin
+        //   trans.rsp.prdata = `MON.PRDATA;
+        // end
+        trans.req.pstrb = `MON.PSTRB;
+        trans.rsp.pready = `MON.PREADY;
         trans.rsp.pslverr = `MON.PSLVERR;
 
         trans.display("MONITOR");

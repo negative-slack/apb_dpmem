@@ -43,7 +43,7 @@ class Driver;
     @(`DRI);
   endtask : cycle
 
-  // deassert presetn for 5 clock cycles !
+  // deassert presetn for 1 clock cycles !
   task resetn();
     idle_state();
     // repeat (5)
@@ -54,18 +54,18 @@ class Driver;
   task idle_state();
     `DRI.PSEL <= 0;  // low 
     `DRI.PADDR <= '0;
-    `DRI.PSTRB <= '0;
     `DRI.PWRITE <= 0;
     `DRI.PWDATA <= '0;
+    `DRI.PSTRB <= '0;
     `DRI.PENABLE <= 0;  // low
   endtask
 
   task setup_state(input addr_t paddr, strb_t pstrb, logic pwrite, data_t pwdata);
     `DRI.PSEL <= 1;  // high
     `DRI.PADDR <= paddr;
-    `DRI.PSTRB <= pstrb;
     `DRI.PWRITE <= pwrite;
     `DRI.PWDATA <= pwdata;
+    `DRI.PSTRB <= pstrb;
     `DRI.PENABLE <= 0;  // low
   endtask
 
@@ -75,17 +75,16 @@ class Driver;
   endtask
 
   task drive_b2b_tnxs(input addr_t paddr, strb_t pstrb, logic pwrite, data_t pwdata);
-
+    // start directly from the setup_state
     setup_state(paddr, pstrb, pwrite, pwdata);
     cycle();
 
     access_state();
     wait (`DRI.PREADY == 1);
-
   endtask
 
   task drive_tnxs_w_idle(input addr_t paddr, strb_t pstrb, logic pwrite, data_t pwdata);
-    if (trans.idle_cycles > 0) begin
+    if (trans.idle_cycles > 0) begin // idle cycle here anywhere between 1 and 5
       repeat (trans.idle_cycles) begin
         idle_state();
         cycle();

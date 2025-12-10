@@ -27,6 +27,7 @@ class Monitor;
 
   virtual apb_if mon_intf;
   mailbox mon2scb_mbx;
+  
   Transaction trans;
 
   `define MON mon_intf.monitor_cb

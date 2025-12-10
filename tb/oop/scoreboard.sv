@@ -29,10 +29,11 @@ class Scoreboard;
   mailbox mon2scb_mbx;
   event scb_ended;
 
+  // define scoreboard memory
   localparam MEM_DEPTH = 1 << `APB_ADDR_WIDTH;
   data_t scb_mem[0:MEM_DEPTH-1];
 
-  int read_match_cnt;
+  int scb_read_match_cnt;
 
   function new(mailbox mon2scb_mbx, event scb_ended);
     this.mon2scb_mbx = mon2scb_mbx;
@@ -61,8 +62,8 @@ class Scoreboard;
               trans.rsp.prdata
           );
         if (trans.rsp.prdata == scb_mem[trans.req.paddr]) begin
-          read_match_cnt++;
-          $display("Scoreboard MATCH! READ Count = %0d", read_match_cnt);
+          scb_read_match_cnt++;
+          $display("Scoreboard MATCH! READ Counter = %0d", scb_read_match_cnt);
         end
       end
     end

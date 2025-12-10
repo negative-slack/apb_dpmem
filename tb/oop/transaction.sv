@@ -27,11 +27,10 @@ import apb_pkg::*;
 
 class Transaction;
 
-  // rand logic PRESETn;
   rand apb_req_t req;
   apb_rsp_t rsp;
   rand bit b2b_tnxs;  // 0: no b2b_tnxs, 1: there is a b2b_tnxs
-  rand int unsigned idle_cycles;  // if b2b_txns is asseted, the # of idle_cycles = 0
+  rand int unsigned idle_cycles;  // if b2b_txns is asserted, the # of idle_cycles = 0
 
   // below varaibles only help to constraint the paddr 
   rand int one_hot_index;
@@ -39,7 +38,7 @@ class Transaction;
 
   // constraint to generate only one hot state values for the paddr
   // as an e.g. ; 0x1, 0x2, 0x4, 0x8, 0x10, 0x20, 0x40, 0,80, 0x100
-  // I was asked this by a broadcom engineer lol !
+  // I was asked this constraint question by a broadcom engineer in 01/25
   constraint paddr_one_hot_index {
     one_hot_index inside {[0 : 9]};
     req.paddr == 1 << one_hot_index;
@@ -56,8 +55,8 @@ class Transaction;
   // constraint to distribute the presetn 
   constraint presetn_dist_c {
     req.PRESETn dist {
-      0 :/ 2,  // 2% (it actually appeared 22 times)
-      1 :/ 98  // 98% (it actually appeared 978 times)
+      0 :/ 2,  // 2% (it actually appeared 13 times)
+      1 :/ 98  // 98% (it actually appeared 987 times)
     };
 
     // req.PRESETn dist {
@@ -70,21 +69,31 @@ class Transaction;
   // constraint to distribute the pwrite 
   constraint pwrite_dist_c {
     req.pwrite dist {
-      0 :/ 50,  // 50% (it appeared exactly 500 times)
-      1 :/ 50  // 50% (it appeared exactly 500 times)
+      0 :/ 50,  // 50% (it appeared exactly 496 times)
+      1 :/ 50  // 50% (it appeared exactly 504 times)
     };
   }
 
-  // constraint to set pwdata to 0 if it is a read operation ! 
-  constraint pwrite_pwdata_c {(req.pwrite == 0) -> (req.pwdata == 0);}
+  // // constraint to set pwdata to 0 if it is a read operation ! 
+  // constraint pwrite_pwdata_c {(req.pwrite == 0) -> (req.pwdata == 0);}
 
-  // constraint to set pstrb to 0 if it is a read operation !
-  // according to the specs below "Section 3.2": 
-  // For read transfers, the Requester must drive all bits of PSTRB LOW.
-  constraint pwrite_pstrb_c {(req.pwrite == 0) -> (req.pstrb == 0);}
+  // // constraint to set pstrb to 0 if it is a read operation !
+  // // according to the specs below "Section 3.2": 
+  // // For read transfers, the Requester must drive all bits of PSTRB LOW.
+  // constraint pwrite_pstrb_c {(req.pwrite == 0) -> (req.pstrb == 0);}
 
-  // constraint for pstrb to never be 0 when pwrite is 1
-  constraint pstrb_pwrite_c {(req.pwrite == 1) -> (req.pstrb != 0);}
+  // // constraint for pstrb to never be 0 when pwrite is 1
+  // constraint pwrite_pstrb_c1 {(req.pwrite == 1) -> (req.pstrb != 0);}
+
+  // all the three single constraints above could be combined in a one simple if/else statement since they are related to the pwrite as below
+  constraint pwrite_pwdata_pstrb_c {
+    if (!req.pwrite) {
+      req.pwdata == 0;
+      req.pstrb == 0;
+    } else {
+      req.pstrb != 0;
+    }
+  }
 
   // constraint to choose the number of idle_cycles between 1 - 5
   constraint idle_cycles_c {idle_cycles inside {[0 : 5]};}

@@ -40,7 +40,7 @@ module apb_dpmem
   data_t MEM[0:MEM_DEPTH-1];
   localparam int unsigned NO_WRITE_LOW_ADDRESS = 0;
   localparam int unsigned NO_WRITE_HIGH_ADDRESS = 15;
-  // this generate blk only needed to dump sampled MEM as tmp regs to view them in the waveforms  
+  // this generate blk only needed to dump sampled MEM as tmp regs to view them in the surfur/gtkwave waveforms 
   generate
     genvar idx;
     for (idx = 0; idx < MEM_DEPTH; idx = idx + 1) begin
@@ -80,7 +80,7 @@ module apb_dpmem
 
       ACCESS: begin
         if (apb_slave.PREADY) begin
-          if (apb_slave.PSEL && !apb_slave.PENABLE) begin
+          if (apb_slave.PSEL && !apb_slave.PENABLE) begin // b2b_tnxs ? 
             next_state = SETUP;
           end else begin
             next_state = IDLE;

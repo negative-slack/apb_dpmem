@@ -25,7 +25,7 @@
 
 class Generator;
 
-  Transaction trans;
+  Transaction trans;  // declare a handle
   mailbox gen2dri_mbx;
   event gen_ended;
 
@@ -38,17 +38,17 @@ class Generator;
 
   task run();
     for (int i = 0; i < num_tnxs; i++) begin
-      trans = new();
+      trans = new(); // allocate a new Transaction on each iteration
       assert (trans.randomize())
       else $error("Transaction:%0d/%0d is not randomized", i + 1, num_tnxs);
       trans.display("Generator");
-      $display("The Generator created the Transaction:%0d/%0d as above",  // 
+      $display("The Generator has created the Transaction:%0d/%0d as above successfully",  // 
                i + 1, num_tnxs);
       gen2dri_mbx.put(trans);
     end
     $display("");
     $display("/**********************************************************************/");
-    $display("@ time = %0t, the Generator has finished the generation of %0d items", $time,
+    $display("@ time = %0.3f, the Generator has finished the generation of %0d items", $time,
              num_tnxs);
     $display("/**********************************************************************/");
     $display("");

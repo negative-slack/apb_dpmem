@@ -39,12 +39,15 @@ class Generator;
   task run();
     for (int i = 0; i < num_tnxs; i++) begin
       trans = new();  // allocate a new Transaction on each iteration
-      assert (trans.randomize())
-      else $error("Transaction:%0d/%0d is not randomized", i + 1, num_tnxs);
-      trans.display("Generator");
-      $display("The Generator has created the Transaction:%0d/%0d as above successfully",  // 
-               i + 1, num_tnxs);
-      gen2dri_mbx.put(trans);
+      if (!trans.randomize()) begin
+        $error("Transaction:%0d/%0d is not randomized", i + 1, num_tnxs);
+      end else begin
+        $display("");
+        $display("The Generator has created the Transaction:%0d/%0d as below successfully:",  // 
+                 i + 1, num_tnxs);
+        trans.display("Generator");
+        gen2dri_mbx.put(trans);
+      end
     end
     $display("");
     $display("/**********************************************************************/");

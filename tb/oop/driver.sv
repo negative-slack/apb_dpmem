@@ -124,6 +124,7 @@ class Driver;
     for (int i = 0; i < Generator::num_tnxs; i++) begin
       gen2dri_mbx.get(trans);
       drive();
+      $display("");
       trans.display("DRIVER");
     end
     ->dri_ended;

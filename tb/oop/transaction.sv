@@ -108,25 +108,51 @@ class Transaction;
     };
   }
 
+  function string b2b_tnxs_string(bit b2b_tnxs_t);
+    if (b2b_tnxs_t == 1) begin
+      return "YES";
+    end else begin
+      return "NO";
+    end
+  endfunction
+
   function void display(string module_name);
     if (module_name == "Generator" || module_name == "DRIVER") begin
+      $display("+-------------------------+");
+      $display("- %-s", {module_name});
+      $display("+-------------------------+");
+      $display(" Time: %0.3f ns", $time);
       $display("");
-      $display("-------------------------");
-      $display("- %s", module_name);
-      $display("-------------------------");
-      $display(
-          "t=%0.3f ns, \nPRESETn=%0b, PADDR=%0h, PWRITE=%0b, PWDATA=%0h, PSTRB=%0b, b2b_tnxs=%0b, idle_cycles=%0d",  //
-          $time, req.PRESETn, req.paddr, req.pwrite, req.pwdata, req.pstrb, b2b_tnxs, idle_cycles);
+      $display("   Name               Value");
+      $display("   +-------------------------+");
+      $display("   PRESETn:           %b", req.PRESETn,);
+      $display("   PADDR:             0x%8h", req.paddr);
+      $display("   PWRITE:            %b", req.pwrite);
+      $display("   PWDATA:            0x%8h", req.pwdata);
+      $display("   PSTRB:             %b", req.pstrb);
+      $display("   b2b_tnxs:          %0b", b2b_tnxs_string(b2b_tnxs));
+      $display("   # of idle cycles:  %0d", idle_cycles);
+      $display("+-------------------------+");
     end else begin
       $display("");
-      $display("-------------------------");
-      $display("- %s", module_name);
-      $display("-------------------------");
-      $display(
-          "t=%0.3f ns, \nINPUT SIGNALS: PRESETn=%0b, PADDR=0x%0h, PWRITE=%0b, PWDATA=0x%0h, PSTRB=%0b, \nOUTPUT SIGNLAS: PREADY=%0b, PRDATA=0x%0h, PSLVERR=%0b, DPMEM=0x%0h",  //
-          $time,  //
-          req.PRESETn, req.paddr, req.pwrite, req.pwdata, req.pstrb,  ///
-          rsp.pready, rsp.prdata, rsp.pslverr, top.dut.MEM[req.paddr]);
+      $display("+-------------------------+");
+      $display("- %-s", {module_name});
+      $display("+-------------------------+");
+      $display(" Time: %0.3f ns", $time);
+      $display("");
+      $display("  INPUT SIGNALS:");
+      $display("   PRESETn: %1b", req.PRESETn,);
+      $display("   PADDR:   0x%0h", req.paddr);
+      $display("   PWRITE:  %b", req.pwrite);
+      $display("   PWDATA:  0x%8h", req.pwdata);
+      $display("   PSTRB:   0x%b", req.pstrb);
+      $display("");
+      $display("  OUTPUT SIGNALS:");
+      $display("   PREADY:  %b", rsp.pready,);
+      $display("   PRDATA:  0x%8h", rsp.prdata);
+      $display("   PSLVERR: %b", rsp.pslverr);
+      $display("+-------------------------+");
+
     end
   endfunction : display
 

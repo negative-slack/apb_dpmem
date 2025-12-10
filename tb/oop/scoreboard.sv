@@ -42,11 +42,18 @@ class Scoreboard;
 
   function void display(string module_name);
     $display("");
-    $display("-------------------------");
+    $display("+-------------------------+");
     $display("- %s", module_name);
-    $display("-------------------------");
-    $display("t=%0.3f ns \nADDRESS=0x%0h\nPWDATA=0x%0h, PSTRB=%0b, \nMEM BEFORE WRITE=0x%0h, \nMEM AFTER WRITE=0x%0h",  //
-             $time, trans.req.paddr, trans.req.pwdata, trans.req.pstrb, scb_mem[trans.req.paddr], top.dut.MEM[trans.req.paddr]);
+    $display("+-------------------------+");
+    $display(" Time: %0.3f ns", $time);
+    $display("");
+    $display("  PADDR:           0x%8h", trans.req.paddr,);
+    $display("  PWRITE:          %b", trans.req.pwrite);
+    $display("  PWDATA:          0x%8h", trans.req.pwdata);
+    $display("  PSTRB:           %b", trans.req.pstrb);
+    $display("  MEM BEFORE WRITE:0x%8h:", scb_mem[trans.req.paddr]);
+    $display("  MEM AFTER WRITE: 0x%8h:", top.dut.MEM[trans.req.paddr]);
+    $display("+-------------------------+");
   endfunction
 
   task run();

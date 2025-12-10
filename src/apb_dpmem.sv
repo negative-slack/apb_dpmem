@@ -80,7 +80,7 @@ module apb_dpmem
 
       ACCESS: begin
         if (apb_slave.PREADY) begin
-          if (apb_slave.PSEL && !apb_slave.PENABLE) begin // b2b_tnxs ? 
+          if (apb_slave.PSEL && !apb_slave.PENABLE) begin  // b2b_tnxs ? 
             next_state = SETUP;
           end else begin
             next_state = IDLE;
@@ -106,7 +106,7 @@ module apb_dpmem
         apb_slave.PWRITE) begin
           $display("");
           $error(
-              "YOU ARE TRYING TO WRITE TO THE ADDRESS=0x%0h. \nADDRESSES FROM 0x0 till 0xf are READ ONLY",
+              "DUT ERROR: YOU ARE TRYING TO WRITE TO THE ADDRESS=0x%0h. \nADDRESSES FROM 0x0 till 0xf are READ ONLY",
               apb_slave.PADDR);
           apb_slave.PREADY  = 1;
           apb_slave.PSLVERR = 1;
@@ -165,6 +165,8 @@ module apb_dpmem
       endcase
     end
   end
+
+  bind apb_dpmem apb_assertions apb_asserts_dut (.assert_intf(apb_if.sva_mp));
 
 endmodule : apb_dpmem
 

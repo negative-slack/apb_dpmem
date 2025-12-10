@@ -51,7 +51,7 @@ class Generator;
     end
     $display("");
     $display("/**********************************************************************/");
-    $display("@ time = %0.3f, the Generator has finished the generation of %0d items", $time,
+    $display("@ Time = %0.3f, the Generator has finished the generation of %0d tnxs", $time,
              num_tnxs);
     $display("/**********************************************************************/");
     $display("");

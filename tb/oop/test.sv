@@ -37,18 +37,17 @@ program Test (
 
   task initialize_memories();
     automatic int seed = 123;
-    $display("Initializing the apb_dpmem slave and Scoreboard memories");
-
+    $display("Initializing the APB_DPMEM slave and Scoreboard memories");
     for (int i = 0; i < dut.MEM_DEPTH; i++) begin
       automatic data_t random_val = $random(seed);
       dut.MEM[i] = random_val;
       env.scb.scb_mem[i] = random_val;
       $display("i=%0d\t APB_DPMEM=0x%0h\t SCB_MEM=0x%0h", i, dut.MEM[i], env.scb.scb_mem[i]);
       assert (dut.MEM[i] == env.scb.scb_mem[i])
-      else $error("ERROR : MISMATCH MEMORY INITALIZATION");
+      else $error("INITIALIZATION ERROR");
     end
 
-    $display("SUCCESS: Both memories initialized with identical values");
+    $display("INITIALIZATION SUCCESS: Both memories initialized with identical values");
   endtask
 
 endprogram : Test

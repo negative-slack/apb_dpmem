@@ -55,7 +55,6 @@ class Transaction;
   // constraint to only access the first 64B (first 16 addresses [0:15]) or last 64B (last 16 addresses [1008:1023]) region of a 1kB space
   constraint paddr_c {req.paddr inside {[0 : 2 ** 4 - 1], [(2 ** 10 - 2 ** 4) : (2 ** 10 - 1)]};}
 
-
   // constraint to distribute the presetn 
   constraint presetn_dist_c {
     req.PRESETn dist {
@@ -123,7 +122,7 @@ class Transaction;
   function void display(string module_name);
     if (module_name == "Generator" || module_name == "DRIVER") begin
       $display("+-------------------------+");
-      $display("- %-s", {module_name});
+      $display("+ %-s +", {module_name});
       $display("+-------------------------+");
       $display(" Time: %0.3f ns", $time);
       $display("");
@@ -134,24 +133,28 @@ class Transaction;
       $display("   PWRITE:            %b", req.pwrite);
       $display("   PWDATA:            0x%8h", req.pwdata);
       $display("   PSTRB:             %b", req.pstrb);
-      $display("   b2b_tnxs:          %0b", b2b_tnxs_string(b2b_tnxs));
-      $display("   # of idle cycles:  %0d", idle_cycles);
+      $display("   b2b_tnxs:          %b", b2b_tnxs_string(b2b_tnxs));
+      $display("   # of idle cycles:  %1d", idle_cycles);
       $display("+-------------------------+");
     end else begin
       $display("");
       $display("+-------------------------+");
-      $display("- %-s", {module_name});
+      $display("+ %-s +", {module_name});
       $display("+-------------------------+");
       $display(" Time: %0.3f ns", $time);
       $display("");
       $display("  INPUT SIGNALS:");
-      $display("   PRESETn: %1b", req.PRESETn,);
-      $display("   PADDR:   0x%0h", req.paddr);
+      $display("   Name     Value");
+      $display("   +----------------------+");
+      $display("   PRESETn: %b", req.PRESETn,);
+      $display("   PADDR:   0x%8h", req.paddr);
       $display("   PWRITE:  %b", req.pwrite);
       $display("   PWDATA:  0x%8h", req.pwdata);
-      $display("   PSTRB:   0x%b", req.pstrb);
+      $display("   PSTRB:   %b", req.pstrb);
       $display("");
       $display("  OUTPUT SIGNALS:");
+      $display("   Name     Value");
+      $display("   +----------------------+");
       $display("   PREADY:  %b", rsp.pready,);
       $display("   PRDATA:  0x%8h", rsp.prdata);
       $display("   PSLVERR: %b", rsp.pslverr);

@@ -40,7 +40,7 @@ class Scoreboard;
     this.scb_ended   = scb_ended;
   endfunction
 
-  function void display(string module_name);
+  function void write_display(string module_name);
     $display("");
     $display("+-------------------------+");
     $display("- %s", module_name);
@@ -56,11 +56,25 @@ class Scoreboard;
     $display("+-------------------------+");
   endfunction
 
+  function void read_display(string module_name);
+    $display("");
+    $display("+-------------------------+");
+    $display("- %s", module_name);
+    $display("+-------------------------+");
+    $display(" Time: %0.3f ns", $time);
+    $display("");
+    $display("  PADDR:    0x%8h", trans.req.paddr,);
+    $display("  PWRITE:   %b", trans.req.pwrite);
+    $display("  SCB_MEM:  0x%8h:", scb_mem[trans.req.paddr]);
+    $display("  PRDATA:   0x%8h:", trans.rsp.prdata);
+    $display("");
+  endfunction
+
   task run();
     for (int i = 0; i < Generator::num_tnxs; ++i) begin
       mon2scb_mbx.get(trans);
-      display("SCOREBOARD");
       if (trans.req.pwrite) begin
+        write_display("SCOREBOARD");
         if (!(trans.req.paddr >= 10'h0 && trans.req.paddr <= 10'hf)) begin
           for (int i = 0; i < `APB_STRB_WIDTH; i++) begin
             if (trans.req.pstrb[i]) begin
@@ -79,7 +93,9 @@ class Scoreboard;
           );
         if (trans.rsp.prdata == scb_mem[trans.req.paddr]) begin
           scb_read_match_cnt++;
-          $display("Scoreboard MATCH! READ Counter = %0d", scb_read_match_cnt);
+          read_display("SCOREBOARD");
+          $display("Scoreboard MATCH! \nThe READ Counter = %0d", scb_read_match_cnt);
+          $display("+-------------------------+");
         end
       end
     end

@@ -27,19 +27,22 @@ class Monitor;
 
   virtual apb_if mon_intf;
   mailbox mon2scb_mbx;
+  event mon_ended;
 
   Transaction trans;
 
   `define MON mon_intf.monitor_cb
 
-  function new(virtual apb_if mon_intf, mailbox mon2scb_mbx);
+  function new(virtual apb_if mon_intf, mailbox mon2scb_mbx, event mon_ended);
     this.mon_intf = mon_intf;
     this.mon2scb_mbx = mon2scb_mbx;
+    this.mon_ended = mon_ended;
   endfunction
 
   task run();
 
     forever begin
+
       @(`MON);
 
       if (`MON.PSEL && `MON.PENABLE && `MON.PREADY) begin
@@ -47,27 +50,21 @@ class Monitor;
         trans = new();
 
         trans.req.PRESETn = `MON.PRESETn;
+
         trans.req.paddr = `MON.PADDR;
         trans.req.pwrite = `MON.PWRITE;
-
         trans.req.pwdata = `MON.PWDATA;
-
-        trans.rsp.prdata = `MON.PRDATA;
-
-        // if (trans.req.pwrite) begin
-        //   trans.req.pwdata = `MON.PWDATA;
-        // end else begin
-        //   trans.rsp.prdata = `MON.PRDATA;
-        // end
         trans.req.pstrb = `MON.PSTRB;
+
         trans.rsp.pready = `MON.PREADY;
+        trans.rsp.prdata = `MON.PRDATA;
         trans.rsp.pslverr = `MON.PSLVERR;
 
         trans.display("MONITOR");
         mon2scb_mbx.put(trans);
       end
     end
-
+    ->mon_ended;
   endtask
 
   `undef MON

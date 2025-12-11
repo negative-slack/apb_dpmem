@@ -37,6 +37,7 @@ class Environment;
   event          gen_ended;
   event          dri_ended;
   event          scb_ended;
+  event          mon_ended;
 
   virtual apb_if vif;
 
@@ -46,13 +47,13 @@ class Environment;
     mon2scb_t = new();
     gen       = new(gen2dri_t, gen_ended);
     dri       = new(vif, gen2dri_t, dri_ended);
-    mon       = new(vif, mon2scb_t);
+    mon       = new(vif, mon2scb_t, mon_ended);
     scb       = new(mon2scb_t, scb_ended);
     cvg       = new(vif);
   endfunction
 
   task run();
-  
+
     fork
       gen.run();
       dri.run();

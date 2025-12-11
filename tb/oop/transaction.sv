@@ -111,6 +111,14 @@ class Transaction;
     };
   }
 
+  function string pwrite_string(logic pwrite_t);
+    if (pwrite_t) begin
+      return "1 : WRITE TNX";
+    end else begin
+      return "0 : READ TNX";
+    end
+  endfunction
+
   function string b2b_tnxs_string(bit b2b_tnxs_t);
     if (b2b_tnxs_t == 1) begin
       return "YES";
@@ -130,7 +138,7 @@ class Transaction;
       $display("   +-------------------------+");
       $display("   PRESETn:           %b", req.PRESETn,);
       $display("   PADDR:             0x%8h", req.paddr);
-      $display("   PWRITE:            %b", req.pwrite);
+      $display("   PWRITE:            %b", pwrite_string(req.pwrite));
       $display("   PWDATA:            0x%8h", req.pwdata);
       $display("   PSTRB:             %b", req.pstrb);
       $display("   b2b_tnxs:          %b", b2b_tnxs_string(b2b_tnxs));
@@ -148,7 +156,7 @@ class Transaction;
       $display("   +----------------------+");
       $display("   PRESETn: %b", req.PRESETn,);
       $display("   PADDR:   0x%8h", req.paddr);
-      $display("   PWRITE:  %b", req.pwrite);
+      $display("   PWRITE:  %b", pwrite_string(req.pwrite));
       $display("   PWDATA:  0x%8h", req.pwdata);
       $display("   PSTRB:   %b", req.pstrb);
       $display("");

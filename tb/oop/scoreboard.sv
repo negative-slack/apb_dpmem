@@ -48,7 +48,7 @@ class Scoreboard;
     $display(" Time: %0.3f ns", $time);
     $display("");
     $display("  PADDR:           0x%8h", trans.req.paddr,);
-    $display("  PWRITE:          %b", trans.req.pwrite);
+    $display("  PWRITE:          %b", trans.pwrite_string(trans.req.pwrite));
     $display("  PWDATA:          0x%8h", trans.req.pwdata);
     $display("  PSTRB:           %b", trans.req.pstrb);
     $display("  MEM BEFORE WRITE:0x%8h:", scb_mem[trans.req.paddr]);
@@ -64,14 +64,14 @@ class Scoreboard;
     $display(" Time: %0.3f ns", $time);
     $display("");
     $display("  PADDR:    0x%8h", trans.req.paddr,);
-    $display("  PWRITE:   %b", trans.req.pwrite);
+    $display("  PWRITE:   %b", trans.pwrite_string(trans.req.pwrite));
     $display("  SCB_MEM:  0x%8h:", scb_mem[trans.req.paddr]);
     $display("  PRDATA:   0x%8h:", trans.rsp.prdata);
     $display("");
   endfunction
 
   task run();
-    for (int i = 0; i < Generator::num_tnxs; ++i) begin
+    forever begin
       mon2scb_mbx.get(trans);
       if (trans.req.pwrite) begin
         write_display("SCOREBOARD");

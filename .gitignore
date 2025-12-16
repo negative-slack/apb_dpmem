@@ -5,6 +5,7 @@ tb/oop/xsim.codeCov
 tb/oop/xcrg_func_cov_report
 tb/oop/xcrg_code_cov_report
 tb/oop/*.log
+!xsim.log
 tb/oop/*.jou
 tb/oop/*.txt
 tb/oop/*.wdb

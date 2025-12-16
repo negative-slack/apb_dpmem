@@ -10,6 +10,6 @@
 ./Driver.sv
 ./Monitor.sv
 ./Scoreboard.sv
-./Enviroment.sv
+./Enviromnent.sv
 ./Test.sv
 ./top.sv

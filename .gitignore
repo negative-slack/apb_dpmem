@@ -10,3 +10,10 @@ tb/oop/*.jou
 tb/oop/*.txt
 tb/oop/*.wdb
 tb/oop/*.pb
+
+tb/oop/doc/*.aux
+tb/oop/doc/*.fdb_latexmk
+tb/oop/doc/*.fls
+tb/oop/doc/*.log
+tb/oop/doc/*.synctex.gz
+tb/oop/doc/*.toc

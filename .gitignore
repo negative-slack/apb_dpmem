@@ -11,9 +11,9 @@ tb/oop/*.txt
 tb/oop/*.wdb
 tb/oop/*.pb
 
-tb/doc/*.aux
-tb/doc/*.fdb_latexmk
-tb/doc/*.fls
-tb/doc/*.log
-tb/doc/*.synctex.gz
-tb/doc/*.toc
+doc/*.aux
+doc/*.fdb_latexmk
+doc/*.fls
+doc/*.log
+doc/*.synctex.gz
+doc/*.toc

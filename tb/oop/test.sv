@@ -58,10 +58,10 @@ program Test (
 
   function void display_dut_memory_after();
     $display("");
-    $display("   i\t Before\t After\t STATUS");
+    $display("   i\t Before\t After\t CHANGED YES (Y) | NO (N)");
     $display("+--------------------------------------------------------------------------------+");
     for (int i = 0; i < dut.MEM_DEPTH; ++i) begin
-      automatic string status = (initialize_memories.initial_mem[i] == dut.MEM[i]) ? "UNCHANGED" : "CHANGED";
+      automatic string status = !(initialize_memories.initial_mem[i] == dut.MEM[i]) ? "Y" : "N";
       $display("%4h\t0x%8h\t 0x%8h\t %s", i, initialize_memories.initial_mem[i], dut.MEM[i], status);
     end
   endfunction

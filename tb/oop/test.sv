@@ -33,10 +33,13 @@ program Test (
     env = new(test_intf);
     initialize_memories();
     env.main();
+    display_dut_memory_after();
+    $finish;
   end
 
   task initialize_memories();
     automatic int seed = 123;
+    data_t initial_mem[0:dut.MEM_DEPTH-1];
     $display("Initializing the APB_DPMEM slave and Scoreboard memories");
     $display("   i\t APB_DPMEM\t SCB_MEM");
     $display("+-------------------------+");
@@ -44,6 +47,7 @@ program Test (
       automatic data_t random_val = $random(seed);
       dut.MEM[i] = random_val;
       env.scb.scb_mem[i] = random_val;
+      initial_mem[i] = random_val;
       $display("%4h\t 0x%8h\t 0x%8h", i, dut.MEM[i], env.scb.scb_mem[i]);
       assert (dut.MEM[i] == env.scb.scb_mem[i])
       else $error("INITIALIZATION ERROR");
@@ -51,6 +55,16 @@ program Test (
 
     $display("INITIALIZATION SUCCESS: Both memories initialized with identical values");
   endtask
+
+  function void display_dut_memory_after();
+    $display("");
+    $display("   i\t Before\t After\t STATUS");
+    $display("+--------------------------------------------------------------------------------+");
+    for (int i = 0; i < dut.MEM_DEPTH; ++i) begin
+      automatic string status = (initialize_memories.initial_mem[i] == dut.MEM[i]) ? "UNCHANGED" : "CHANGED";
+      $display("%4h\t0x%8h\t 0x%8h\t %s", i, initialize_memories.initial_mem[i], dut.MEM[i], status);
+    end
+  endfunction
 
 endprogram : Test
 

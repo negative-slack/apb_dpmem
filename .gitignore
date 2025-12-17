@@ -10,6 +10,7 @@ tb/oop/*.jou
 tb/oop/*.txt
 tb/oop/*.wdb
 tb/oop/*.pb
+tb/oop/*.vcd
 
 doc/*.aux
 doc/*.fdb_latexmk

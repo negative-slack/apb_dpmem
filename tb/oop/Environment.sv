@@ -68,7 +68,6 @@ class Environment;
 
   task main;
     run();
-    $finish;
   endtask : main
 
 endclass : Environment

@@ -39,10 +39,10 @@ class Transaction;
   // constraint to generate only one hot state values for the paddr
   // as an e.g. ; 0x1, 0x2, 0x4, 0x8, 0x10, 0x20, 0x40, 0,80, 0x100
   // I was asked this constraint question by a broadcom engineer in 01/25
-  // constraint paddr_one_hot_index {
-  //   one_hot_index inside {[0 : 9]};
-  //   req.paddr == 1 << one_hot_index;
-  // }
+  constraint paddr_one_hot_index {
+    one_hot_index inside {[0 : 9]};
+    req.paddr == 1 << one_hot_index;
+  }
 
   // constraint to generate a paddr value which has binary all 1s grouped together 
   // as an e.g, 00_1111_1000, 00_0011_1110, etc . . .
@@ -53,7 +53,7 @@ class Transaction;
   // }
 
   // constraint to only access the first 64B (first 16 addresses [0:15]) or last 64B (last 16 addresses [1008:1023]) region of a 1kB space
-  constraint paddr_c {req.paddr inside {[0 : 2 ** 4 - 1], [(2 ** 10 - 2 ** 4) : (2 ** 10 - 1)]};}
+  // constraint paddr_c {req.paddr inside {[0 : 2 ** 4 - 1], [(2 ** 10 - 2 ** 4) : (2 ** 10 - 1)]};}
 
   // constraint to distribute the presetn 
   constraint presetn_dist_c {

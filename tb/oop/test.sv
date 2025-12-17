@@ -58,11 +58,16 @@ program Test (
 
   function void display_dut_memory_after();
     $display("");
-    $display("   i\t Before\t After\t CHANGED YES (Y) | NO (N)");
-    $display("+--------------------------------------------------------------------------------+");
+    $display("NOW DISPALYING THE DUT MEMORY CONTENTS BEFORE & AFTER THE 1000 TRANSACTIONS");
+    $display("");
+    $display("+------------------------------------------+");
+    $display("ADDR    MEM           MEM           CHANGED?");
+    $display("        Before        After           Y | N ");
+    $display("+------------------------------------------+");
     for (int i = 0; i < dut.MEM_DEPTH; ++i) begin
       automatic string status = !(initialize_memories.initial_mem[i] == dut.MEM[i]) ? "Y" : "N";
-      $display("%4h\t0x%8h\t 0x%8h\t %s", i, initialize_memories.initial_mem[i], dut.MEM[i], status);
+      $display("%4h    0x%8h    0x%8h%-11s", i, initialize_memories.initial_mem[i], dut.MEM[i],
+               status);
     end
   endfunction
 

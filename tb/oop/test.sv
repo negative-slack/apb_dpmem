@@ -61,11 +61,11 @@ program Test (
     $display("NOW DISPALYING THE DUT MEMORY CONTENTS BEFORE & AFTER THE 1000 TRANSACTIONS");
     $display("");
     $display("+------------------------------------------+");
-    $display("ADDR    MEM           MEM           CHANGED?");
-    $display("        Before        After           Y | N ");
+    $display("ADDR    DUT MEM       DUT MEM       CHANGED?");
+    $display("        Before        After           Y |   ");
     $display("+------------------------------------------+");
     for (int i = 0; i < dut.MEM_DEPTH; ++i) begin
-      automatic string status = !(initialize_memories.initial_mem[i] == dut.MEM[i]) ? "Y" : "N";
+      automatic string status = !(initialize_memories.initial_mem[i] == dut.MEM[i]) ? "Y" : "";
       $display("%4h    0x%8h    0x%8h%-11s", i, initialize_memories.initial_mem[i], dut.MEM[i],
                status);
     end

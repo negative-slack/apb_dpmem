@@ -1,5 +1,5 @@
-`ifndef APB_DEFINES__SV
-`define APB_DEFINES__SV 
+`ifndef APB_DPMEM_DEFINES__SVH
+`define APB_DPMEM_DEFINES__SVH
 
 `ifndef APB_ADDR_WIDTH
 `define APB_ADDR_WIDTH 32

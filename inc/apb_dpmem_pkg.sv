@@ -20,43 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-`include "../../src/apb_if.sv"
-`include "../../src/apb_dpmem.sv"
+`ifndef APB_DPMEM_PKG__SV
+`define APB_DPMEM_PKG__SV 
 
-module top;
+`include "apb_dpmem_defines.svh"
 
-  bit clk;
-  bit resetn;
+package apb_dpmem_pkg;
 
-  // clk generation
-  initial begin
-    clk = 1;
-    forever begin
-      #5;
-      clk = ~clk;
-    end
-  end
+  typedef logic [`APB_ADDR_WIDTH-1:0] addr_t;
+  typedef logic [`APB_DATA_WIDTH-1:0] data_t;
+  typedef logic [`APB_STRB_WIDTH-1:0] strb_t;
 
-  // initial begin
-  //   $dumpfile("apb_dpmem_uvm.vcd");
-  //   $dumpvars(0, top);
-  // end
+endpackage : apb_dpmem_pkg
 
-  apb_if top_intf (
-      .PCLK(clk),
-      .PRESETn(resetn)
-  );
-
-  apb_dpmem dut (.apb_slave(top_intf.slv_mp));
-
-  initial begin
-    run_test();
-  end
-
-  initial begin
-    uvm_config_db#(virtual apb_if)::set(uvm_root::get(), "*", "vif", intf);
-    $dumpfile("dump.vcd");
-    $dumpvars;
-  end
-
-endmodule : top
+`endif

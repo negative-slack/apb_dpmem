@@ -23,12 +23,23 @@
 `ifndef TRANSACTION__SV
 `define TRANSACTION__SV 
 
-import apb_pkg::*;
+import apb_dpmem_pkg::*;
 
 class Transaction;
 
-  rand apb_req_t req;
-  apb_rsp_t rsp;
+  // rand apb_req_t req
+  // apb_rsp_t rsp
+
+  rand bit presetn;
+  rand addr_t paddr;
+  rand logic pwrite;
+  rand data_t pwdata;
+  rand strb_t pstrb;
+
+  logic pready;
+  data_t prdata;
+  logic pslverr;
+
   rand bit b2b_tnxs;  // 0: no b2b_tnxs, 1: there is a b2b_tnxs
   rand int unsigned idle_cycles;  // if b2b_txns is asserted, the # of idle_cycles = 0
 
@@ -41,7 +52,7 @@ class Transaction;
   // I was asked this constraint question by a broadcom engineer in 01/25
   constraint paddr_one_hot_index {
     one_hot_index inside {[0 : 9]};
-    req.paddr == 1 << one_hot_index;
+    paddr == 1 << one_hot_index;
   }
 
   // constraint to generate a paddr value which has binary all 1s grouped together 
@@ -49,20 +60,20 @@ class Transaction;
   // constraint paddr_all_1s_grouped_together {
   //   one_hot_index inside {[1 : 10]};
   //   start_position inside {[0 : 9]};
-  //   req.paddr == ((1 << one_hot_index) - 1) << start_position;
+  //   paddr == ((1 << one_hot_index) - 1) << start_position;
   // }
 
   // constraint to only access the first 64B (first 16 addresses [0:15]) or last 64B (last 16 addresses [1008:1023]) region of a 1kB space
-  // constraint paddr_c {req.paddr inside {[0 : 2 ** 4 - 1], [(2 ** 10 - 2 ** 4) : (2 ** 10 - 1)]};}
+  // constraint paddr_c {paddr inside {[0 : 2 ** 4 - 1], [(2 ** 10 - 2 ** 4) : (2 ** 10 - 1)]};}
 
   // constraint to distribute the presetn 
   constraint presetn_dist_c {
-    req.PRESETn dist {
+    presetn dist {
       0 :/ 2,  // 2% (it actually appeared 13 times)
       1 :/ 98  // 98% (it actually appeared 987 times)
     };
 
-    // req.PRESETn dist {
+    // presetn dist {
     //   0 := 20,  // 20/1000 
     //   1 := 980  // 980/1000 
     // };
@@ -71,30 +82,30 @@ class Transaction;
 
   // constraint to distribute the pwrite 
   constraint pwrite_dist_c {
-    req.pwrite dist {
+    pwrite dist {
       0 :/ 50,  // 50% (it appeared exactly 496 times)
       1 :/ 50  // 50% (it appeared exactly 504 times)
     };
   }
 
   // // constraint to set pwdata to 0 if it is a read operation ! 
-  // constraint pwrite_pwdata_c {(req.pwrite == 0) -> (req.pwdata == 0);}
+  // constraint pwrite_pwdata_c {(pwrite == 0) -> (pwdata == 0);}
 
   // // constraint to set pstrb to 0 if it is a read operation !
   // // according to the specs below "Section 3.2": 
   // // For read transfers, the Requester must drive all bits of PSTRB LOW.
-  // constraint pwrite_pstrb_c {(req.pwrite == 0) -> (req.pstrb == 0);}
+  // constraint pwrite_pstrb_c {(pwrite == 0) -> (pstrb == 0);}
 
   // // constraint for pstrb to never be 0 when pwrite is 1
-  // constraint pwrite_pstrb_c1 {(req.pwrite == 1) -> (req.pstrb != 0);}
+  // constraint pwrite_pstrb_c1 {(pwrite == 1) -> (pstrb != 0);}
 
   // all the three single constraints above could be combined in a one simple if/else statement since they are related to the pwrite as below
   constraint pwrite_pwdata_pstrb_c {
-    if (!req.pwrite) {
-      req.pwdata == 0;
-      req.pstrb == 0;
+    if (!pwrite) {
+      pwdata == 0;
+      pstrb == 0;
     } else {
-      req.pstrb != 0;
+      pstrb != 0;
     }
   }
 
@@ -136,11 +147,11 @@ class Transaction;
       $display("");
       $display("   Name               Value");
       $display("   +-------------------------+");
-      $display("   PRESETn:           %b", req.PRESETn,);
-      $display("   PADDR:             0x%8h", req.paddr);
-      $display("   PWRITE:            %b", pwrite_string(req.pwrite));
-      $display("   PWDATA:            0x%8h", req.pwdata);
-      $display("   PSTRB:             %b", req.pstrb);
+      $display("   PRESETn:           %b", presetn,);
+      $display("   PADDR:             0x%8h", paddr);
+      $display("   PWRITE:            %b", pwrite_string(pwrite));
+      $display("   PWDATA:            0x%8h", pwdata);
+      $display("   PSTRB:             %b", pstrb);
       $display("   b2b_tnxs:          %b", b2b_tnxs_string(b2b_tnxs));
       $display("   # of idle cycles:  %1d", idle_cycles);
       $display("+-------------------------+");
@@ -154,18 +165,18 @@ class Transaction;
       $display("  INPUT SIGNALS:");
       $display("   Name     Value");
       $display("   +----------------------+");
-      $display("   PRESETn: %b", req.PRESETn,);
-      $display("   PADDR:   0x%8h", req.paddr);
-      $display("   PWRITE:  %b", pwrite_string(req.pwrite));
-      $display("   PWDATA:  0x%8h", req.pwdata);
-      $display("   PSTRB:   %b", req.pstrb);
+      $display("   PRESETn: %b", presetn,);
+      $display("   PADDR:   0x%8h", paddr);
+      $display("   PWRITE:  %b", pwrite_string(pwrite));
+      $display("   PWDATA:  0x%8h", pwdata);
+      $display("   PSTRB:   %b", pstrb);
       $display("");
       $display("  OUTPUT SIGNALS:");
       $display("   Name     Value");
       $display("   +----------------------+");
-      $display("   PREADY:  %b", rsp.pready,);
-      $display("   PRDATA:  0x%8h", rsp.prdata);
-      $display("   PSLVERR: %b", rsp.pslverr);
+      $display("   PREADY:  %b", pready,);
+      $display("   PRDATA:  0x%8h", prdata);
+      $display("   PSLVERR: %b", pslverr);
       $display("+-------------------------+");
 
     end

@@ -1,14 +1,20 @@
 `ifndef APB_DPMEM_TRANSACTION__SV
 `define APB_DPMEM_TRANSACTION__SV 
 
-`include "apb_dpmem_defines.sv"
+`include "../../../../inc/apb_dpmem_pkg.sv"
 
-class 
-   extends uvm_sequence_item;
+/* The uvm_sequence_item class provides the basic functionality for objects,
+  both sequence items and sequences, to operate in the sequence mechanism.
+  
+  Class Hierarchy
+  uvm_void
+    uvm_object
+      uvm_transaction
+        uvm_sequence_item
+          apb_dpmem_transaction
+*/
 
-  typedef logic [`APB_ADDR_WIDTH-1:0] addr_t;
-  typedef logic [`APB_DATA_WIDTH-1:0] data_t;
-  typedef logic [`APB_STRB_WIDTH-1:0] strb_t;
+class apb_dpmem_transaction extends uvm_sequence_item;
 
   //////////////////////////////////////////////////////////////////////////////
   // Declaration of apb_dpmem transaction fields
@@ -23,7 +29,7 @@ class
   data_t prdata;
   logic pslverr;
 
-  // below variables are randomized to help if the next tnxs is b2b (w/o idle cycles) or not
+  // below variables are randomized to help determine if the next tnxs is b2b (w/o idle cycles) or not
   rand bit b2b_tnxs;  // 0: no b2b_tnxs, 1: there is a b2b_tnxs
   rand int unsigned idle_cycles;  // if b2b_txns is asserted, the # of idle_cycles = 0
   // below varaibles only help to constraint the paddr 
@@ -133,6 +139,6 @@ class
     };
   }
 
-endclass
+endclass : apb_dpmem_transaction
 
 `endif

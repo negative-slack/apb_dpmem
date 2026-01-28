@@ -39,11 +39,11 @@ program Test (
 
   task initialize_memories();
     automatic int seed = 123;
-    data_t initial_mem[0:dut.MEM_DEPTH-1];
+    data_t initial_mem[0:`MEM_DEPTH-1];
     $display("Initializing the APB_DPMEM slave and Scoreboard memories");
     $display("   i\t APB_DPMEM\t SCB_MEM");
     $display("+-------------------------+");
-    for (int i = 0; i < dut.MEM_DEPTH; i++) begin
+    for (int i = 0; i < `MEM_DEPTH; i++) begin
       automatic data_t random_val = $random(seed);
       dut.MEM[i] = random_val;
       env.scb.scb_mem[i] = random_val;
@@ -64,7 +64,7 @@ program Test (
     $display("ADDR    DUT MEM       DUT MEM       CHANGED?");
     $display("        Before        After           Y |   ");
     $display("+------------------------------------------+");
-    for (int i = 0; i < dut.MEM_DEPTH; ++i) begin
+    for (int i = 0; i < `MEM_DEPTH; ++i) begin
       automatic string status = !(initialize_memories.initial_mem[i] == dut.MEM[i]) ? "Y" : "";
       $display("%4h    0x%8h    0x%8h%-11s", i, initialize_memories.initial_mem[i], dut.MEM[i],
                status);

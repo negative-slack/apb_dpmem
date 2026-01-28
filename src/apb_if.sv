@@ -24,7 +24,7 @@
 `define APB_IF__SV 
 
 interface apb_if
-  import apb_pkg::*;
+  import apb_dpmem_pkg::*;
 (
     input bit PCLK,    // system clk
     input bit PRESETn  // system reset negative

@@ -1,3 +1,6 @@
+`ifndef APB_DPMEM_ENV__SV
+`define APB_DPMEM_ENV__SV 
+
 class apb_dpmem_env extends uvm_env;
 
   //////////////////////////////////////////////////////////////////////////////
@@ -9,6 +12,7 @@ class apb_dpmem_env extends uvm_env;
   // agent and scoreboard instance
   //////////////////////////////////////////////////////////////////////////////
   apb_dpmem_agent      apb_dpmem_agnt;
+  apb_dpmem_ref_model  apb_dpmem_rm;
   apb_dpmem_scoreboard apb_dpmem_scb;
 
   ///////////////////////////////////////////////////////////////////////////////
@@ -38,3 +42,5 @@ class apb_dpmem_env extends uvm_env;
   endfunction : connect_phase
 
 endclass : mem_model_env
+
+`endif

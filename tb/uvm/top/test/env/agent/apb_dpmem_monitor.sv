@@ -19,9 +19,10 @@ class apb_dpmem_monitor extends uvm_monitor;
   virtual apb_if vif;
 
   ///////////////////////////////////////////////////////////////////////////////
-  // Declaration of Analysis ports and exports 
+  // Declaration of Analysis ports and exports
+  // broadcasting the dut signals ? 
   ///////////////////////////////////////////////////////////////////////////////
-  uvm_analysis_port #(apb_dpmem_sequence_item) mon2sb_port;
+  uvm_analysis_port #(apb_dpmem_sequence_item) mon2sb_ap;
 
   ///////////////////////////////////////////////////////////////////////////////
   // Method name : new 
@@ -30,7 +31,7 @@ class apb_dpmem_monitor extends uvm_monitor;
   function new(string name, uvm_component parent);
     super.new(name, parent);
     trans = new();
-    mon2sb_port = new("mon2sb_port", this);
+    mon2sb_ap = new("mon2sb_ap", this);
   endfunction : new
 
   ///////////////////////////////////////////////////////////////////////////////
@@ -39,20 +40,9 @@ class apb_dpmem_monitor extends uvm_monitor;
   ///////////////////////////////////////////////////////////////////////////////
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
-    if (!uvm_config_db#(virtual apb_if)::get(this, "", "intf", vif))
-      `uvm_fatal("NO_MON_INTF", {"virtual interface must be set for: ", get_full_name(), ".vif"});
+    if (!uvm_config_db#(virtual apb_if)::get(this, "", "vif", vif))
+      `uvm_fatal("NO_VIF", {"virtual interface must be set for: ", get_full_name(), ".vif"});
   endfunction : build_phase
-
-  ///////////////////////////////////////////////////////////////////////////////
-  // Method name : run_phase 
-  // Description : Extract the info from DUT via interface 
-  ///////////////////////////////////////////////////////////////////////////////
-  virtual task run_phase(uvm_phase phase);
-    forever begin
-      collect_trans();
-      mon2sb_port.write(trans);
-    end
-  endtask : run_phase
 
   `define MON vif.monitor_cb
 
@@ -61,8 +51,6 @@ class apb_dpmem_monitor extends uvm_monitor;
   // Description : run task for collecting adder_4_bit transactions
   ///////////////////////////////////////////////////////////////////////////////
   task collect_trans();
-
-    forever begin
 
       @(`MON);
 
@@ -85,12 +73,21 @@ class apb_dpmem_monitor extends uvm_monitor;
         trans.print();
       end
 
-    end
-
   endtask
 
   `undef MON
 
-endclass
+  ///////////////////////////////////////////////////////////////////////////////
+  // Method name : run_phase 
+  // Description : Extract the info from DUT via interface 
+  ///////////////////////////////////////////////////////////////////////////////
+  virtual task run_phase(uvm_phase phase);
+    forever begin
+      collect_trans();
+      mon2sb_ap.write(trans);
+    end
+  endtask : run_phase
+
+endclass : apb_dpmem_monitor
 
 `endif

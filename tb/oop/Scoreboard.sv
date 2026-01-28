@@ -30,8 +30,7 @@ class Scoreboard;
   event scb_ended;
 
   // define scoreboard memory
-  localparam MEM_DEPTH = 1 << `APB_ADDR_WIDTH;
-  data_t scb_mem[0:MEM_DEPTH-1];
+  data_t scb_mem[0:`MEM_DEPTH-1];
 
   int scb_read_match_cnt;
 
@@ -47,12 +46,12 @@ class Scoreboard;
     $display("+-------------------------+");
     $display(" Time: %0.3f ns", $time);
     $display("");
-    $display("  PADDR:           0x%8h", trans.req.paddr,);
-    $display("  PWRITE:          %b", trans.pwrite_string(trans.req.pwrite));
-    $display("  PWDATA:          0x%8h", trans.req.pwdata);
-    $display("  PSTRB:           %b", trans.req.pstrb);
-    $display("  MEM BEFORE WRITE:0x%8h:", scb_mem[trans.req.paddr]);
-    $display("  MEM AFTER WRITE: 0x%8h:", top.dut.MEM[trans.req.paddr]);
+    $display("  PADDR:           0x%8h", trans.paddr,);
+    $display("  PWRITE:          %b", trans.pwrite_string(trans.pwrite));
+    $display("  PWDATA:          0x%8h", trans.pwdata);
+    $display("  PSTRB:           %b", trans.pstrb);
+    $display("  MEM BEFORE WRITE:0x%8h:", scb_mem[trans.paddr]);
+    $display("  MEM AFTER WRITE: 0x%8h:", top.dut.MEM[trans.paddr]);
     $display("+-------------------------+");
   endfunction
 
@@ -63,35 +62,35 @@ class Scoreboard;
     $display("+-------------------------+");
     $display(" Time: %0.3f ns", $time);
     $display("");
-    $display("  PADDR:    0x%8h", trans.req.paddr,);
-    $display("  PWRITE:   %b", trans.pwrite_string(trans.req.pwrite));
-    $display("  SCB_MEM:  0x%8h:", scb_mem[trans.req.paddr]);
-    $display("  PRDATA:   0x%8h:", trans.rsp.prdata);
+    $display("  PADDR:    0x%8h", trans.paddr,);
+    $display("  PWRITE:   %b", trans.pwrite_string(trans.pwrite));
+    $display("  SCB_MEM:  0x%8h:", scb_mem[trans.paddr]);
+    $display("  PRDATA:   0x%8h:", trans.prdata);
     $display("");
   endfunction
 
   task run();
     forever begin
       mon2scb_mbx.get(trans);
-      if (trans.req.pwrite) begin
+      if (trans.pwrite) begin
         write_display("SCOREBOARD");
-        if (!(trans.req.paddr >= 10'h0 && trans.req.paddr <= 10'hf)) begin
+        if (!(trans.paddr >= 10'h0 && trans.paddr <= 10'hf)) begin
           for (int i = 0; i < `APB_STRB_WIDTH; i++) begin
-            if (trans.req.pstrb[i]) begin
-              scb_mem[trans.req.paddr][(i*8)+:8] = trans.req.pwdata[(i*8)+:8];
+            if (trans.pstrb[i]) begin
+              scb_mem[trans.paddr][(i*8)+:8] = trans.pwdata[(i*8)+:8];
             end
           end
         end
       end else begin
-        assert (trans.rsp.prdata == scb_mem[trans.req.paddr])
+        assert (trans.prdata == scb_mem[trans.paddr])
         else
           $error(
               "Scoreboard ERROR; THERE IS A MISMATCH at addr %0h: expected %0h, got %0h",
-              trans.req.paddr,
-              scb_mem[trans.req.paddr],
-              trans.rsp.prdata
+              trans.paddr,
+              scb_mem[trans.paddr],
+              trans.prdata
           );
-        if (trans.rsp.prdata == scb_mem[trans.req.paddr]) begin
+        if (trans.prdata == scb_mem[trans.paddr]) begin
           scb_read_match_cnt++;
           read_display("SCOREBOARD");
           $display("Scoreboard MATCH! \nThe READ Counter = %0d", scb_read_match_cnt);

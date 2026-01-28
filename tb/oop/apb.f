@@ -1,5 +1,5 @@
-../../src/apb_define.sv
-../../src/apb_pkg.sv
+../../inc/apb_dpmem_defines.svh
+../../inc/apb_dpmem_pkg.sv
 ../../src/apb_if.sv
 ../../src/apb_dpmem.sv
 

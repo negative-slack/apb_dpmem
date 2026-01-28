@@ -20,39 +20,28 @@ class apb_dpmem_driver extends uvm_driver #(apb_dpmem_transaction);
 
   ///////////////////////////////////////////////////////////////////////////////
   // Declaration of Analysis ports and exports 
+  // Description : Broadcasts a value to all subscribers implementing a uvm_analysis_imp.
+  // broadcasting the transactions signals to the ref models ? 
   ///////////////////////////////////////////////////////////////////////////////
-  uvm_analysis_port #(apb_dpmem_transaction) dri2rm_port;
+  uvm_analysis_port #(apb_dpmem_transaction) dri2rm_ap;
 
   //////////////////////////////////////////////////////////////////////////////
   // Method name : new 
-  // Description : constructor 
+  // Description : Creates and initializes an instance of this class using the
+  //               normal constructor arguments for uvm_component: 
+  //               - name is the name of the instance,
+  //               - parent is the handle to the hierarchical parent, if any. 
   //////////////////////////////////////////////////////////////////////////////
   function new(string name, uvm_component parent);
     super.new(name, parent);
+    dri2rm_ap = new("dri2rm_ap", this);
   endfunction : new
-
-  //////////////////////////////////////////////////////////////////////////////
-  // Method name : build_phase 
-  // Description : construct the components 
-  //////////////////////////////////////////////////////////////////////////////
-  function void build_phase(uvm_phase phase);
-    super.build_phase(phase);
-    if (!uvm_config_db#(virtual apb_if)::get(this, "", "vif", vif))
-      `uvm_fatal("NO_VIF", {"virtual interface must be set for: ", get_full_name(), ".vif"});
-  endfunction : build_phase
 
   `define DRI vif.driver_cb
 
   task cycle();
     @(`DRI);
   endtask : cycle
-
-  // deassert presetn for 1 clock cycles !
-  task resetn();
-    idle_state();
-    cycle();
-    `DRI.PRESETn <= 1;
-  endtask : resetn
 
   task idle_state();
     `DRI.PSEL <= 0;  // low 
@@ -111,6 +100,13 @@ class apb_dpmem_driver extends uvm_driver #(apb_dpmem_transaction);
     end
   endtask : drive_tnxs_w_idle
 
+  // deassert presetn for 1 clock cycles !
+  task resetn();
+    idle_state();
+    cycle();
+    `DRI.PRESETn <= 1;
+  endtask : resetn
+
   task drive();
     `DRI.PRESETn <= trans.PRESETn;
 
@@ -123,22 +119,54 @@ class apb_dpmem_driver extends uvm_driver #(apb_dpmem_transaction);
     end
   endtask : drive
 
+  `undef DRI
+
+  //////////////////////////////////////////////////////////////////////////////
+  // Method name : build_phase 
+  // Description : construct the components 
+  //////////////////////////////////////////////////////////////////////////////
+  /*
+  Declaration : uvm_config_db#(int)::set(this, "*", "A")
+  Discription : All of the functions in uvm_config_db#(T) are static,
+               so they must be called using the :: operator.  For example:
+  */
+  function void build_phase(uvm_phase phase);
+    super.build_phase(phase);
+    if (!uvm_config_db#(virtual apb_if)::get(this, "", "vif", vif)) begin
+      `uvm_fatal("NO_VIF", {"virtual interface must be set for: ", get_full_name(), ".vif"});
+    end
+  endfunction : build_phase
+
   //////////////////////////////////////////////////////////////////////////////
   // Method name : run_phase 
   // Description : Drive the transaction info to DUT
-  //////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////// 
+
+  /* Ports :
+      seq_item_port	Derived driver classes should use this port to request items from the sequencer.
+  */
+
+  /*  Method      : get_next_item
+      Declaretion : virtual task get_next_item (output 	REQ 	t)
+      Description : Retrieves the next available item from a sequence. 
+  */
+
+  /*  Method      : item_done
+      Declaretion : virtual function void item_done (RSP item = null)
+      Description : Indicates that the request is completed.
+  */
+
   virtual task run_phase(uvm_phase phase);
     forever begin
       seq_item_port.get_next_item(req);
       drive();
       `uvm_info(get_full_name(), $sformatf("TRANSACTION FROM DRIVER"), UVM_LOW);
       req.print();
+      dri2rm_ap.write(rsp);
       seq_item_port.item_done();
     end
   endtask : run_phase
 
-  `undef DRI
-
-endclass
+endclass : apb_dpmem_driver
 
 `endif

@@ -31,7 +31,7 @@ class apb_dpmem_agent extends uvm_agent;
     super.build_phase(phase);
     sequencer = apb_dpmem_sequencer::type_id::create("sequencer", this);
     driver = apb_dpmem_driver::type_id::create("driver", this);
-    monitor = adder_4_bit_monitor::type_id::create("monitor", this);
+    monitor = apb_dpmem_monitor::type_id::create("monitor", this);
   endfunction : build_phase
 
   ///////////////////////////////////////////////////////////////////////////////
@@ -42,6 +42,6 @@ class apb_dpmem_agent extends uvm_agent;
     driver.seq_item_port.connect(sequencer.seq_item_export);
   endfunction : connect_phase
 
-endclass
+endclass : apb_dpmem_agent
 
 `endif

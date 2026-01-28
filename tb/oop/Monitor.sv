@@ -20,37 +20,55 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-`ifndef APB_PKG__SV
-`define APB_PKG__SV 
+`ifndef MONITOR__SV
+`define MONITOR__SV 
 
-`include "apb_define.sv"
+class Monitor;
 
-package apb_pkg;
+  virtual apb_if mon_intf;
+  mailbox mon2scb_mbx;
+  event mon_ended;
 
-  typedef logic [`APB_ADDR_WIDTH-1:0] addr_t;
-  typedef logic [`APB_DATA_WIDTH-1:0] data_t;
-  typedef logic [`APB_STRB_WIDTH-1:0] strb_t;
+  Transaction trans;
 
-  typedef enum bit [1:0] {
-    IDLE,
-    SETUP,
-    ACCESS
-  } apb_fsm_enum;
+  `define MON mon_intf.monitor_cb
 
-  typedef struct packed {
-    bit PRESETn; // must always be in a known state; hence the bit type
-    addr_t paddr;
-    logic pwrite;
-    data_t pwdata;
-    strb_t pstrb;
-  } apb_req_t;
+  function new(virtual apb_if mon_intf, mailbox mon2scb_mbx, event mon_ended);
+    this.mon_intf = mon_intf;
+    this.mon2scb_mbx = mon2scb_mbx;
+    this.mon_ended = mon_ended;
+  endfunction
 
-  typedef struct packed {
-    logic  pready;
-    data_t prdata;
-    logic  pslverr;
-  } apb_rsp_t;
+  task run();
 
-endpackage : apb_pkg
+    forever begin
+
+      @(`MON);
+
+      if (`MON.PSEL && `MON.PENABLE && `MON.PREADY) begin
+
+        trans = new();
+
+        trans.presetn = `MON.PRESETn;
+
+        trans.paddr = `MON.PADDR;
+        trans.pwrite = `MON.PWRITE;
+        trans.pwdata = `MON.PWDATA;
+        trans.pstrb = `MON.PSTRB;
+
+        trans.pready = `MON.PREADY;
+        trans.prdata = `MON.PRDATA;
+        trans.pslverr = `MON.PSLVERR;
+
+        trans.display("MONITOR");
+        mon2scb_mbx.put(trans);
+      end
+    end
+    ->mon_ended;
+  endtask
+
+  `undef MON
+
+endclass : Monitor
 
 `endif

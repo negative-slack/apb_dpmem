@@ -20,19 +20,48 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-`ifndef APB_DEFINE__SV
-`define APB_DEFINE__SV 
+`include "../../../src/apb_if.sv"
+`include "../../../src/apb_dpmem.sv"
 
-`ifndef APB_ADDR_WIDTH
-`define APB_ADDR_WIDTH 10
-`endif
+module top;
 
-`ifndef APB_DATA_WIDTH
-`define APB_DATA_WIDTH 32
-`endif
+  import uvm_pkg::*;
+  `include "uvm_macros.svh"
 
-`ifndef APB_STRB_WIDTH
-`define APB_STRB_WIDTH `APB_DATA_WIDTH / 8
-`endif
+  bit clk;
+  bit resetn;
+  localparam CLK_CYCLE = 10;
 
-`endif
+  // clk generation
+  initial begin
+    clk = 1;
+    forever begin
+      #(CLK_CYCLE / 2);
+      clk = ~clk;
+    end
+  end
+
+  apb_if top_intf (
+      .PCLK(clk),
+      .PRESETn(resetn)
+  );
+
+  apb_dpmem dut (.apb_slave(top_intf.slv_mp));
+
+  //////////////////////////////////////////////////////////////////////////////
+  /*********************starting the execution uvm phases**********************/
+  //////////////////////////////////////////////////////////////////////////////
+  initial begin
+    run_test();
+  end
+
+  initial begin
+    uvm_config_db#(virtual apb_if)::set(uvm_root::get(), "*", "vif", intf);
+  end
+
+  initial begin
+    $dumpfile("apb_dpmem_uvm.vcd");
+    $dumpvars(0, top);
+  end
+
+endmodule : top

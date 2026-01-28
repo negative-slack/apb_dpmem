@@ -12,6 +12,6 @@ class apb_dpmem_sequencer extends uvm_sequencer #(apb_dpmem_transaction);
     super.new(name, parent);
   endfunction
 
-endclass
+endclass : apb_dpmem_sequencer
 
 `endif

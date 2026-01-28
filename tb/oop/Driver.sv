@@ -109,19 +109,19 @@ class Driver;
   endtask
 
   task drive();
-    `DRI.PRESETn <= trans.req.PRESETn;
+    `DRI.PRESETn <= trans.presetn;
 
-    if (!trans.req.PRESETn) begin
+    if (!trans.presetn) begin
       resetn();
     end else if (!trans.b2b_tnxs) begin
-      drive_tnxs_w_idle(trans.req.paddr, trans.req.pstrb, trans.req.pwrite, trans.req.pwdata);
+      drive_tnxs_w_idle(trans.paddr, trans.pstrb, trans.pwrite, trans.pwdata);
     end else begin
-      drive_b2b_tnxs(trans.req.paddr, trans.req.pstrb, trans.req.pwrite, trans.req.pwdata);
+      drive_b2b_tnxs(trans.paddr, trans.pstrb, trans.pwrite, trans.pwdata);
     end
   endtask
 
   task run();
-    for (int i = 0; i < Generator::num_tnxs; i++) begin
+    for (int i = 0; i < `NUM_OF_TRANSACTIONS; i++) begin
       gen2dri_mbx.get(trans);
       drive();
       $display("");

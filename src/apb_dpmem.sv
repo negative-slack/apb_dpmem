@@ -24,10 +24,16 @@
 `define APB_DPMEM__SV 
 
 module apb_dpmem
-  import apb_pkg::*;
+  import apb_dpmem_pkg::*;
 (
     apb_if.slv_mp apb_slave
 );
+
+  typedef enum bit [1:0] {
+    IDLE,
+    SETUP,
+    ACCESS
+  } apb_fsm_enum;
 
   apb_fsm_enum present_state, next_state;
 
@@ -36,8 +42,7 @@ module apb_dpmem
   logic [1:0] read_cnt;
   logic [1:0] write_cnt;
 
-  localparam MEM_DEPTH = 1 << `APB_ADDR_WIDTH;
-  data_t MEM[0:MEM_DEPTH-1];
+  data_t MEM[0:`MEM_DEPTH-1];
   localparam int unsigned NO_WRITE_LOW_ADDRESS = 0;
   localparam int unsigned NO_WRITE_HIGH_ADDRESS = 15;
   // this generate blk only needed to dump sampled MEM as tmp regs to view them in the surfur/gtkwave waveforms 

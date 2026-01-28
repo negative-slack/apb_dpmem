@@ -27,9 +27,6 @@ import apb_dpmem_pkg::*;
 
 class Transaction;
 
-  // rand apb_req_t req
-  // apb_rsp_t rsp
-
   rand bit presetn;
   rand addr_t paddr;
   rand logic pwrite;

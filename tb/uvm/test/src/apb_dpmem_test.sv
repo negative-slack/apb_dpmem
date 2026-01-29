@@ -1,0 +1,50 @@
+`ifndef APB_DPMEM_TEST__SV
+`define APB_DPMEM_TEST__SV 
+
+class apb_dpmem_test extends uvm_test;
+
+  import apb_dpmem_pkg::*;
+
+  //////////////////////////////////////////////////////////////////////////////
+  // Declaration of component utils to register with factory 
+  //////////////////////////////////////////////////////////////////////////////
+  `uvm_component_utils(apb_dpmem_test)
+
+  //////////////////////////////////////////////////////////////////////////////
+  // sequence and environment instance 
+  //////////////////////////////////////////////////////////////////////////////
+  apb_dpmem_sequence seq;
+  apb_dpmem_environment env;
+
+  ///////////////////////////////////////////////////////////////////////////////
+  // Method name : new 
+  // Description : constructor
+  ///////////////////////////////////////////////////////////////////////////////
+  function new(string name = "apb_dpmem_test", uvm_component parent = null);
+    super.new(name, parent);
+  endfunction : new
+
+  ///////////////////////////////////////////////////////////////////////////////
+  // Method name : build-phase 
+  // Description : construct the components such as.. sequence, environment 
+  ///////////////////////////////////////////////////////////////////////////////
+  virtual function void build_phase(uvm_phase phase);
+    super.build_phase(phase);
+
+    seq = apb_dpmem_sequence::type_id::create("seq");
+    env = apb_dpmem_environment::type_id::create("env", this);
+  endfunction : build_phase
+
+  ////////////////////////////////////////////////////////////////////
+  // Method name : run_phase 
+  // Decription: Trigger the sequences to run 
+  ////////////////////////////////////////////////////////////////////
+  task run_phase(uvm_phase phase);
+    phase.raise_objection(this);
+    seq.start(env.apb_dpmem_agnt.sequencer);
+    phase.drop_objection(this);
+  endtask : run_phase
+
+endclass : apb_dpmem_test
+
+`endif

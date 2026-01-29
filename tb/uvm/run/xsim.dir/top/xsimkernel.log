@@ -1,0 +1,7 @@
+Running: xsim.dir/top/xsimk.exe -runall -simmode gui -testplusarg UVM_TESTNAME=apb_dpmem_test -testplusarg UVM_VERBOSITY=UVM_LOW -wdb top.wdb -simrunnum 0 -socket 59589
+Design successfully loaded
+Design Loading Memory Usage: 17464 KB (Peak: 17464 KB)
+Design Loading CPU Usage: 46 ms
+Simulation completed
+Simulation Memory Usage: 51964 KB (Peak: 51964 KB)
+Simulation CPU Usage: 2624 ms

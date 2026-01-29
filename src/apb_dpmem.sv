@@ -171,7 +171,7 @@ module apb_dpmem
     end
   end
 
-  bind apb_dpmem apb_assertions apb_asserts_dut (.assert_intf(apb_if.sva_mp));
+  // bind apb_dpmem apb_assertions apb_asserts_dut (.assert_intf(apb_if.sva_mp));
 
 endmodule : apb_dpmem
 

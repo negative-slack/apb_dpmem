@@ -1,18 +1,15 @@
-../../src/apb_define.sv
-../../src/apb_pkg.sv
-../../src/apb_if.sv
-../../src/apb_dpmem.sv
+../../../inc/apb_dpmem_defines.svh
+../../../inc/apb_dpmem_pkg.sv
+../../../src/apb_if.sv
+../../../src/apb_dpmem.sv
 
-../env/agent/apb_dpmem_transaction.sv
-../env/agent/apb_dpmem_sequence.sv
-../env/agent/apb_dpmem_sequencer.sv
-../env/agent/apb_dpmem_driver.sv
-../env/agent/apb_dpmem_monitor.sv
-../env/agent/apb_dpmem_agent.sv
 
-../env/ref_model/apb_dpmem_ref_model.sv
-./env/top/apb_dpmem_scoreboard.sv
+../test/env/agent/apb_dpmem_agent_pkg.sv
+../test/env/ref_model/apb_dpmem_ref_model_pkg.sv
+../test/env/subscriber/apb_dpmem_coverage_pkg.sv
+../test/env/scoreboard/apb_dpmem_scoreboard_pkg.sv
+../test/env/apb_dpmem_environment_pkg.sv
+../test/sequence_lib/apb_dpmem_sequence_pkg.sv
+../test/src/apb_dpmem_test_pkg.sv
 
-./apb_dpmem_env.sv
-./apb_dpmem_test.sv
 ./top.sv

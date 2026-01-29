@@ -11,7 +11,7 @@ class apb_dpmem_monitor extends uvm_monitor;
   //////////////////////////////////////////////////////////////////////////////
   // Declaration of Transaction item 
   //////////////////////////////////////////////////////////////////////////////
-  apb_dpmem_sequence_item trans;
+  apb_dpmem_sequence_item act_trans;
 
   //////////////////////////////////////////////////////////////////////////////
   // Declaration of Virtual interface 
@@ -22,7 +22,7 @@ class apb_dpmem_monitor extends uvm_monitor;
   // Declaration of Analysis ports and exports
   // broadcasting the dut signals ? 
   ///////////////////////////////////////////////////////////////////////////////
-  uvm_analysis_port #(apb_dpmem_sequence_item) mon2sb_ap;
+  uvm_analysis_port #(apb_dpmem_sequence_item) mon2scb_port;
 
   ///////////////////////////////////////////////////////////////////////////////
   // Method name : new 
@@ -30,8 +30,8 @@ class apb_dpmem_monitor extends uvm_monitor;
   ///////////////////////////////////////////////////////////////////////////////
   function new(string name, uvm_component parent);
     super.new(name, parent);
-    trans = new();
-    mon2sb_ap = new("mon2sb_ap", this);
+    act_trans = new();
+    mon2scb_port = new("mon2scb_port", this);
   endfunction : new
 
   ///////////////////////////////////////////////////////////////////////////////
@@ -56,21 +56,19 @@ class apb_dpmem_monitor extends uvm_monitor;
 
       if (`MON.PSEL && `MON.PENABLE && `MON.PREADY) begin
 
-        trans = new();
+        act_trans.presetn = `MON.PRESETn;
 
-        trans.PRESETn = `MON.PRESETn;
+        act_trans.paddr = `MON.PADDR;
+        act_trans.pwrite = `MON.PWRITE;
+        act_trans.pwdata = `MON.PWDATA;
+        act_trans.pstrb = `MON.PSTRB;
 
-        trans.paddr = `MON.PADDR;
-        trans.pwrite = `MON.PWRITE;
-        trans.pwdata = `MON.PWDATA;
-        trans.pstrb = `MON.PSTRB;
-
-        trans.pready = `MON.PREADY;
-        trans.prdata = `MON.PRDATA;
-        trans.pslverr = `MON.PSLVERR;
+        act_trans.pready = `MON.PREADY;
+        act_trans.prdata = `MON.PRDATA;
+        act_trans.pslverr = `MON.PSLVERR;
 
         `uvm_info(get_full_name(), $sformatf("TRANSACTION FROM MONITOR"), UVM_LOW);
-        trans.print();
+        act_trans.print();
       end
 
   endtask
@@ -84,7 +82,7 @@ class apb_dpmem_monitor extends uvm_monitor;
   virtual task run_phase(uvm_phase phase);
     forever begin
       collect_trans();
-      mon2sb_ap.write(trans);
+      mon2scb_port.write(act_trans);
     end
   endtask : run_phase
 

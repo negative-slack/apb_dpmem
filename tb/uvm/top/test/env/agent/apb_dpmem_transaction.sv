@@ -19,7 +19,7 @@ class apb_dpmem_transaction extends uvm_sequence_item;
   //////////////////////////////////////////////////////////////////////////////
   // Declaration of apb_dpmem transaction fields
   //////////////////////////////////////////////////////////////////////////////
-  rand bit PRESETn;
+  rand bit presetn;
   rand addr_t paddr;
   rand logic pwrite;
   rand data_t pwdata;
@@ -41,7 +41,7 @@ class apb_dpmem_transaction extends uvm_sequence_item;
   //////////////////////////////////////////////////////////////////////////////
   `uvm_object_utils_begin(apb_dpmem_transaction)
 
-    `uvm_field_int(PRESETn, UVM_ALL_ON)
+    `uvm_field_int(presetn, UVM_ALL_ON)
     `uvm_field_int(paddr, UVM_ALL_ON)
     `uvm_field_int(pwrite, UVM_ALL_ON)
     `uvm_field_int(pwdata, UVM_ALL_ON)
@@ -85,12 +85,12 @@ class apb_dpmem_transaction extends uvm_sequence_item;
 
   // constraint to distribute the presetn 
   constraint presetn_dist_c {
-    PRESETn dist {
+    presetn dist {
       0 :/ 2,  // 2% (it actually appeared 13 times)
       1 :/ 98  // 98% (it actually appeared 987 times)
     };
 
-    // PRESETn dist {
+    // presetn dist {
     //   0 := 20,  // 20/1000 
     //   1 := 980  // 980/1000 
     // };

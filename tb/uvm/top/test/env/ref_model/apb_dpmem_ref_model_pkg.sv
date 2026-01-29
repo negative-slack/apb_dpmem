@@ -2,9 +2,8 @@
 `define APB_DPMEM_REF_MODEL_PKG__SV 
 
 package apb_dpmem_ref_model_pkg;
-
-  import uvm_pkg::*;
   `include "uvm_macros.svh"
+  import uvm_pkg::*;
 
   //////////////////////////////////////////////////////////
   // importing packages : agent, ref model
@@ -15,6 +14,7 @@ package apb_dpmem_ref_model_pkg;
   // include ref model files 
   /////////////////////////////////////////////////////////
   `include "apb_dpmem_ref_model.sv"
+
 
 endpackage
 

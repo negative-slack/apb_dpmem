@@ -108,9 +108,9 @@ class apb_dpmem_driver extends uvm_driver #(apb_dpmem_transaction);
   endtask : resetn
 
   task drive();
-    `DRI.PRESETn <= trans.PRESETn;
+    `DRI.PRESETn <= trans.presetn;
 
-    if (!trans.PRESETn) begin
+    if (!trans.presetn) begin
       resetn();
     end else if (!trans.b2b_tnxs) begin
       drive_tnxs_w_idle(trans.paddr, trans.pstrb, trans.pwrite, trans.pwdata);

@@ -37,6 +37,7 @@ class Monitor;
     this.mon_intf = mon_intf;
     this.mon2scb_mbx = mon2scb_mbx;
     this.mon_ended = mon_ended;
+    trans = new();
   endfunction
 
   task run();
@@ -47,21 +48,20 @@ class Monitor;
 
       if (`MON.PSEL && `MON.PENABLE && `MON.PREADY) begin
 
-        trans = new();
-
         trans.presetn = `MON.PRESETn;
 
-        trans.paddr = `MON.PADDR;
-        trans.pwrite = `MON.PWRITE;
-        trans.pwdata = `MON.PWDATA;
-        trans.pstrb = `MON.PSTRB;
+        trans.paddr   = `MON.PADDR;
+        trans.pwrite  = `MON.PWRITE;
+        trans.pwdata  = `MON.PWDATA;
+        trans.pstrb   = `MON.PSTRB;
 
-        trans.pready = `MON.PREADY;
-        trans.prdata = `MON.PRDATA;
+        trans.pready  = `MON.PREADY;
+        trans.prdata  = `MON.PRDATA;
         trans.pslverr = `MON.PSLVERR;
 
         trans.display("MONITOR");
         mon2scb_mbx.put(trans);
+
       end
     end
     ->mon_ended;

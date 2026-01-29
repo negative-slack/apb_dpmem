@@ -76,6 +76,8 @@ class apb_dpmem_sequence extends uvm_sequence #(apb_dpmem_transaction);
       req = apb_dpmem_transaction::type_id::create("req");
       start_item(req);
       assert (req.randomize());
+      $display("");
+      $display("");
       `uvm_info(get_full_name(), $sformatf("RANDOMIZED TRANSACTION NUM : %0d", i + 1), UVM_LOW);
       req.print();
       finish_item(req);

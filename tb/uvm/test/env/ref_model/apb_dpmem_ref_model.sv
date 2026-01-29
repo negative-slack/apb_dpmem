@@ -101,8 +101,8 @@ class apb_dpmem_ref_model extends uvm_component;
   endtask
 
   task run_phase(uvm_phase phase);
+    initialize_ref_model_mem();
     forever begin
-      initialize_ref_model_mem();
       rm_fifo.get(rm_trans);
       get_expected_transaction(rm_trans);
     end

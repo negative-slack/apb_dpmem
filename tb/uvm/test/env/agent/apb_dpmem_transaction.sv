@@ -50,6 +50,10 @@ class apb_dpmem_transaction extends uvm_sequence_item;
     `uvm_field_int(b2b_tnxs, UVM_ALL_ON)
     `uvm_field_int(idle_cycles, UVM_ALL_ON)
 
+    `uvm_field_int(pready, UVM_ALL_ON)
+    `uvm_field_int(prdata, UVM_ALL_ON)
+    `uvm_field_int(pslverr, UVM_ALL_ON)
+
   `uvm_object_utils_end
 
   //////////////////////////////////////////////////////////////////////////////
@@ -104,6 +108,8 @@ class apb_dpmem_transaction extends uvm_sequence_item;
       1 :/ 50  // 50% (it appeared exactly 504 times)
     };
   }
+
+  constraint presetn_tnxs_fields_c {(!presetn) -> (paddr && pwrite && pwdata && pstrb == 0);}
 
   // // constraint to set pwdata to 0 if it is a read operation ! 
   // constraint pwrite_pwdata_c {(pwrite == 0) -> (pwdata == 0);}

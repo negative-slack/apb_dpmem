@@ -104,10 +104,10 @@ class apb_dpmem_driver extends uvm_driver #(apb_dpmem_transaction);
 
   // deassert presetn for 1 clock cycles !
   task resetn();
-    repeat (2) begin
-      idle_state();
-      cycle();
-    end
+    // repeat (2) begin
+    idle_state();
+    cycle();
+    // end
     `DRI.PRESETn <= 1;
   endtask : resetn
 

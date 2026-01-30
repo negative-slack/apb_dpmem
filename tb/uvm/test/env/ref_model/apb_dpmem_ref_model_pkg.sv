@@ -15,7 +15,6 @@ package apb_dpmem_ref_model_pkg;
   /////////////////////////////////////////////////////////
   `include "apb_dpmem_ref_model.sv"
 
-
 endpackage
 
 `endif

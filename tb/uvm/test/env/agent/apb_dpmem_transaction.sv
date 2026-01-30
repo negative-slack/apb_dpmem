@@ -12,9 +12,11 @@
           apb_dpmem_transaction
 */
 
-class apb_dpmem_transaction extends uvm_sequence_item;
+// Because of this WARNING below I decalred the input outside the class ! 
+// WARNING: [VRFC 10-9281] package import cannot be inside a class
+import apb_dpmem_pkg::*;
 
-  import apb_dpmem_pkg::*;
+class apb_dpmem_transaction extends uvm_sequence_item;
 
   //////////////////////////////////////////////////////////////////////////////
   // Declaration of apb_dpmem transaction fields
@@ -94,6 +96,7 @@ class apb_dpmem_transaction extends uvm_sequence_item;
       1 :/ 98  // 98% (it actually appeared 987 times)
     };
 
+
     // presetn dist {
     //   0 := 20,  // 20/1000 
     //   1 := 980  // 980/1000 
@@ -108,8 +111,6 @@ class apb_dpmem_transaction extends uvm_sequence_item;
       1 :/ 50  // 50% (it appeared exactly 504 times)
     };
   }
-
-  constraint presetn_tnxs_fields_c {(!presetn) -> (paddr && pwrite && pwdata && pstrb == 0);}
 
   // // constraint to set pwdata to 0 if it is a read operation ! 
   // constraint pwrite_pwdata_c {(pwrite == 0) -> (pwdata == 0);}

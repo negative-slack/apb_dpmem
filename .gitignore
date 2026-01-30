@@ -13,6 +13,12 @@ tb/oop/*.wdb
 tb/oop/*.pb
 tb/oop/*.vcd
 
+tb/uvm/run/xcrg_code_cov_report
+tb/uvm/run/xcrg_func_cov_report
+tb/uvm/run/xsim.codeCov
+tb/uvm/run/xsim.covdb
+tb/uvm/run/xsim.dir
+
 tb/uvm/run/*.txt
 tb/uvm/run/*.log
 !xsim.log

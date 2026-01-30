@@ -1,5 +1,6 @@
 `ifndef APB_DPMEM_AGENT_PKG__SV
 `define APB_DPMEM_AGENT_PKG__SV 
+import apb_dpmem_pkg::*;
 
 package apb_dpmem_agent_pkg;
   `include "uvm_macros.svh"

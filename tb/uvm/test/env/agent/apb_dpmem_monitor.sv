@@ -9,7 +9,7 @@ class apb_dpmem_monitor extends uvm_monitor;
   `uvm_component_utils(apb_dpmem_monitor)
 
   //////////////////////////////////////////////////////////////////////////////
-  // Declaration of Transaction item 
+  // Declaration of the ACTUAL Transaction captured from the DUT  
   //////////////////////////////////////////////////////////////////////////////
   apb_dpmem_transaction act_trans;
 
@@ -20,7 +20,8 @@ class apb_dpmem_monitor extends uvm_monitor;
 
   ///////////////////////////////////////////////////////////////////////////////
   // Declaration of Analysis ports and exports
-  // broadcasting the dut signals ? 
+  // broadcasting the ACTUAL transactions to the scoreboard, so we can compare them 
+  // later with the expected transactions from the reference model
   ///////////////////////////////////////////////////////////////////////////////
   uvm_analysis_port #(apb_dpmem_transaction) mon2scb_port;
 

@@ -12,7 +12,7 @@ package apb_dpmem_coverage_pkg;
   import apb_dpmem_ref_model_pkg::*;
 
   //////////////////////////////////////////////////////////
-  // include scoreboard files 
+  // include the coverage file 
   /////////////////////////////////////////////////////////
   `include "apb_dpmem_coverage.sv"
 

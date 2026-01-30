@@ -58,13 +58,13 @@ interface apb_if
 
   //use for verification
   clocking driver_cb @(posedge PCLK);
-    // default input #1step output #1ns;
+    default input #1step output #1ns;
     input PREADY, PRDATA, PSLVERR;
     output PRESETn, PSEL, PADDR, PWRITE, PWDATA, PSTRB, PENABLE;
   endclocking
 
   clocking monitor_cb @(posedge PCLK);
-    // default input #1step;
+    default input #1step;
     input PRESETn, PSEL, PADDR, PWRITE, PWDATA, PSTRB, PENABLE, PREADY, PRDATA, PSLVERR;
   endclocking
 

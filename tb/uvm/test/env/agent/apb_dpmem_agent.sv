@@ -25,7 +25,7 @@ class apb_dpmem_agent extends uvm_agent;
 
   ///////////////////////////////////////////////////////////////////////////////
   // Method name : build-phase 
-  // Description : construct the components such as.. driver,monitor,sequencer..etc
+  // Description : construct the components such as.. driver, sequencer, monitor
   ///////////////////////////////////////////////////////////////////////////////
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
@@ -36,7 +36,8 @@ class apb_dpmem_agent extends uvm_agent;
 
   ///////////////////////////////////////////////////////////////////////////////
   // Method name : connect_phase 
-  // Description : connect tlm ports ande exports (ex: analysis port/exports) 
+  // Description : connect the export of the sequence to the port of the driver 
+  //               that's how the transactions are sent !  
   ///////////////////////////////////////////////////////////////////////////////
   function void connect_phase(uvm_phase phase);
     driver.seq_item_port.connect(sequencer.seq_item_export);

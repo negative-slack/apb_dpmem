@@ -13,12 +13,8 @@ package apb_dpmem_test_pkg;
   import apb_dpmem_sequence_pkg::*;
 
   //////////////////////////////////////////////////////////
-  // include top env files 
+  // include test files 
   /////////////////////////////////////////////////////////
-  //   `include "../env/subscriber/apb_dpmem_coverage.sv"
-  //   `include "../env/scoreboard/apb_dpmem_scoreboard.sv"
-  //   `include "../env/apb_dpmem_environment.sv"
-  //   `include "../sequence_lib/apb_dpmem_sequence.sv"
   `include "./apb_dpmem_test.sv"
 
 endpackage

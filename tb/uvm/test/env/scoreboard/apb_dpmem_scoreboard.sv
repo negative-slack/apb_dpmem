@@ -24,7 +24,7 @@ class apb_dpmem_scoreboard extends uvm_scoreboard;
   uvm_analysis_export #(apb_dpmem_transaction) rm2scb_export;
   apb_dpmem_transaction exp_trans;
 
-  // actual tnxs from the monitor`
+  // actual tnxs from the monitor
   uvm_analysis_export #(apb_dpmem_transaction) mon2scb_export;
   apb_dpmem_transaction act_trans;
 
@@ -39,7 +39,6 @@ class apb_dpmem_scoreboard extends uvm_scoreboard;
 
   ///////////////////////////////////////////////////////////////////////////////
   // Method name : build-phase 
-  // Description : construct the components such as.. driver,monitor,sequencer..etc
   ///////////////////////////////////////////////////////////////////////////////
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
@@ -52,32 +51,19 @@ class apb_dpmem_scoreboard extends uvm_scoreboard;
 
   ///////////////////////////////////////////////////////////////////////////////
   // Method name : connect_phase 
-  // Description : connect tlm ports ande exports (ex: analysis port/exports) 
+  // Description : 
   ///////////////////////////////////////////////////////////////////////////////
   function void connect_phase(uvm_phase phase);
     super.connect_phase(phase);
-    rm2scb_export.connect(rm2scb_export_fifo.analysis_export);
-    mon2scb_export.connect(mon2scb_export_fifo.analysis_export);
+    rm2scb_export.connect(rm2scb_export_fifo.analysis_export);  // export to export connection
+    mon2scb_export.connect(mon2scb_export_fifo.analysis_export);  // export to export connection
   endfunction : connect_phase
 
   ///////////////////////////////////////////////////////////////////////////////
-  // Method name : run_phase
+  // Method name : compare_tnxs 
+  // Description : compare between the expected tnxs coming from the ref model
+  //               and the actual tnxs coming from the monitor
   ///////////////////////////////////////////////////////////////////////////////
-  virtual task run_phase(uvm_phase phase);
-    super.run_phase(phase);
-    forever begin
-      mon2scb_export_fifo.get(act_trans);
-      if (act_trans == null) $stop;
-      act_trans_fifo.push_back(act_trans);
-
-      rm2scb_export_fifo.get(exp_trans);
-      if (exp_trans == null) $stop;
-      exp_trans_fifo.push_back(exp_trans);
-
-      compare_tnxs();
-    end
-  endtask
-
   task compare_tnxs();
     apb_dpmem_transaction exp_trans, act_trans;
     if (exp_trans_fifo.size != 0) begin
@@ -86,14 +72,14 @@ class apb_dpmem_scoreboard extends uvm_scoreboard;
         act_trans = act_trans_fifo.pop_front();
 
         `uvm_info(get_full_name(), $sformatf(
-                  "expected PRDATA =%0h , actual PRDATA =%0h ", exp_trans.prdata, act_trans.prdata),
+                  "EXPECTED PRDATA =%0h , ACTUAL PRDATA =%0h ", exp_trans.prdata, act_trans.prdata),
                   UVM_LOW);
         `uvm_info(get_full_name(), $sformatf(
-                  "expected PREADY =%0h , actual PREADY =%0h ", exp_trans.pready, act_trans.pready),
+                  "EXPECTED PREADY =%0h , ACTUAL PREADY =%0h ", exp_trans.pready, act_trans.pready),
                   UVM_LOW);
         `uvm_info(
             get_full_name(), $sformatf(
-            "expected PSLVERR =%0h , actual PSLVERR =%0h ", exp_trans.pslverr, act_trans.pslverr),
+            "EXPECTED PSLVERR =%0h , ACTUAL PSLVERR =%0h ", exp_trans.pslverr, act_trans.pslverr),
             UVM_LOW);
 
         if (exp_trans.prdata == act_trans.prdata) begin
@@ -118,6 +104,24 @@ class apb_dpmem_scoreboard extends uvm_scoreboard;
         end
 
       end
+    end
+  endtask
+
+  ///////////////////////////////////////////////////////////////////////////////
+  // Method name : run_phase
+  ///////////////////////////////////////////////////////////////////////////////
+  virtual task run_phase(uvm_phase phase);
+    super.run_phase(phase);
+    forever begin
+      mon2scb_export_fifo.get(act_trans);
+      if (act_trans == null) $stop;
+      act_trans_fifo.push_back(act_trans);
+
+      rm2scb_export_fifo.get(exp_trans);
+      if (exp_trans == null) $stop;
+      exp_trans_fifo.push_back(exp_trans);
+
+      compare_tnxs();
     end
   endtask
 

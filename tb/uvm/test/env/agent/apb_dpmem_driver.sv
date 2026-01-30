@@ -1,9 +1,11 @@
 `ifndef APB_DPMEM_DRIVER__SV
 `define APB_DPMEM_DRIVER__SV 
 
-class apb_dpmem_driver extends uvm_driver #(apb_dpmem_transaction);
+// Because of this WARNING below I decalred the input outside the class ! 
+// WARNING: [VRFC 10-9281] package import cannot be inside a class
+import apb_dpmem_pkg::*;
 
-  import apb_dpmem_pkg::*;
+class apb_dpmem_driver extends uvm_driver #(apb_dpmem_transaction);
 
   //////////////////////////////////////////////////////////////////////////////
   // Declaration of component utils to register with factory 
@@ -23,7 +25,8 @@ class apb_dpmem_driver extends uvm_driver #(apb_dpmem_transaction);
   ///////////////////////////////////////////////////////////////////////////////
   // Declaration of Analysis ports and exports 
   // Description : Broadcasts a value to all subscribers implementing a uvm_analysis_imp.
-  // broadcasting the transactions signals to the ref models ? 
+  // broadcasting the transactions signals to the ref models
+  // (basically whatever the driver sees as a transaction, it will be send to the ref model to calculate the expected transactions) 
   ///////////////////////////////////////////////////////////////////////////////
   uvm_analysis_port #(apb_dpmem_transaction) dri2rm_port;
 
@@ -104,10 +107,8 @@ class apb_dpmem_driver extends uvm_driver #(apb_dpmem_transaction);
 
   // deassert presetn for 1 clock cycles !
   task resetn();
-    // repeat (2) begin
     idle_state();
     cycle();
-    // end
     `DRI.PRESETn <= 1;
   endtask : resetn
 

@@ -19,8 +19,8 @@ class apb_dpmem_agent extends uvm_agent;
   ///////////////////////////////////////////////////////////////////////////////
   // Declaration of UVM components such as.. driver, sequencer, monitor 
   ///////////////////////////////////////////////////////////////////////////////
-  apb_dpmem_driver    driver;
   apb_dpmem_sequencer sequencer;
+  apb_dpmem_driver    driver;
   apb_dpmem_monitor   monitor;
 
   ///////////////////////////////////////////////////////////////////////////////
@@ -29,8 +29,8 @@ class apb_dpmem_agent extends uvm_agent;
   ///////////////////////////////////////////////////////////////////////////////
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
-    driver = apb_dpmem_driver::type_id::create("driver", this);
     sequencer = apb_dpmem_sequencer::type_id::create("sequencer", this);
+    driver = apb_dpmem_driver::type_id::create("driver", this);
     monitor = apb_dpmem_monitor::type_id::create("monitor", this);
   endfunction : build_phase
 

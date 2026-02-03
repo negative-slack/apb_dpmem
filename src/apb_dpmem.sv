@@ -37,9 +37,9 @@ module apb_dpmem
 
   apb_fsm_enum present_state, next_state;
 
-  data_t MEM[0:`MEM_DEPTH-1];
-  localparam READ_LATENCY = 2'b01;  // 2 clock cycles delay
-  localparam WRITE_LATENCY = 2'b11;  // 4 clock cycles delay
+  data_t MEM[0:`MEM_DEPTH-1];  // 1024
+  localparam READ_LATENCY = 2'b01;  // 2 clock cycles delay for a read
+  localparam WRITE_LATENCY = 2'b11;  // 4 clock cycles delay for a write
   localparam int unsigned NO_WRITE_LOW_ADDRESS = 0;
   localparam int unsigned NO_WRITE_HIGH_ADDRESS = 15;
   logic [1:0] read_cnt;
@@ -84,6 +84,7 @@ module apb_dpmem
 
       ACCESS: begin
         if (apb_slave.PREADY) begin
+          // from code coverage this statement/branch never executes! 
           if (apb_slave.PSEL && !apb_slave.PENABLE) begin  // is this a b2b_tnxs?
             next_state = SETUP;
           end else begin
@@ -177,7 +178,7 @@ module apb_dpmem
     end
   end
 
-  // bind apb_dpmem apb_assertions apb_asserts_dut (.assert_intf(apb_if.sva_mp));
+  bind apb_dpmem apb_assertions apb_asserts_dut (.assert_intf(apb_if.sva_mp));
 
 endmodule : apb_dpmem
 

@@ -75,10 +75,11 @@ class apb_dpmem_sequence extends uvm_sequence #(apb_dpmem_transaction);
     for (int i = 0; i < `NO_OF_TRANSACTIONS; i++) begin
       req = apb_dpmem_transaction::type_id::create("req");
       start_item(req);
-      assert (req.randomize());
-      $display("");
-      $display("");
-      `uvm_info(get_full_name(), $sformatf("RANDOMIZED TRANSACTION NUM : %0d", i + 1), UVM_LOW);
+      assert (req.randomize())
+      else $error("RANDOMIZATION FAILED");
+      `uvm_info(get_full_name(), $sformatf(
+                "THIS IS THE RANDOMIZED TRANSACTION NUMBER : %0d/%0d", i + 1, `NUM_OF_TRANSACTIONS),
+                UVM_LOW);
       req.print();
       finish_item(req);
     end

@@ -23,6 +23,7 @@ class apb_dpmem_transaction extends uvm_sequence_item;
   // Declaration of apb_dpmem transaction fields
   //////////////////////////////////////////////////////////////////////////////
   rand bit presetn;
+
   rand addr_t paddr;
   rand logic pwrite;
   rand data_t pwdata;
@@ -44,18 +45,19 @@ class apb_dpmem_transaction extends uvm_sequence_item;
   //////////////////////////////////////////////////////////////////////////////
   `uvm_object_utils_begin(apb_dpmem_transaction)
 
-  `uvm_field_int(presetn, UVM_ALL_ON)
-  `uvm_field_int(paddr, UVM_ALL_ON)
-  `uvm_field_int(pwrite, UVM_ALL_ON)
-  `uvm_field_int(pwdata, UVM_ALL_ON)
-  `uvm_field_int(pstrb, UVM_ALL_ON)
+    `uvm_field_int(presetn, UVM_ALL_ON)
 
-  `uvm_field_int(b2b_tnxs, UVM_ALL_ON)
-  `uvm_field_int(idle_cycles, UVM_ALL_ON)
+    `uvm_field_int(paddr, UVM_ALL_ON)
+    `uvm_field_int(pwrite, UVM_ALL_ON)
+    `uvm_field_int(pwdata, UVM_ALL_ON)
+    `uvm_field_int(pstrb, UVM_ALL_ON)
 
-  `uvm_field_int(pready, UVM_ALL_ON)
-  `uvm_field_int(prdata, UVM_ALL_ON)
-  `uvm_field_int(pslverr, UVM_ALL_ON)
+    `uvm_field_int(b2b_tnxs, UVM_ALL_ON)
+    `uvm_field_int(idle_cycles, UVM_ALL_ON)
+
+    `uvm_field_int(pready, UVM_ALL_ON)
+    `uvm_field_int(prdata, UVM_ALL_ON)
+    `uvm_field_int(pslverr, UVM_ALL_ON)
 
   `uvm_object_utils_end
 
@@ -130,12 +132,12 @@ class apb_dpmem_transaction extends uvm_sequence_item;
       pwdata == 0;
       pstrb == 0;
     } else {
-      pstrb != 0;
+      pstrb != 0;  // always change a byte lane if it is a write tnx!
     }
   }
 
-  // constraint to choose the number of idle_cycles between 0 - 5
-  constraint idle_cycles_c {idle_cycles inside {[0 : 5]};}
+  // constraint to choose the number of idle_cycles between 1 - 5
+  constraint idle_cycles_c {idle_cycles inside {[1 : 5]};}
 
   // constraint to set the # of idle cycles to 0, when it is a b2b transactions ! 
   constraint b2b_idle_cycles_c {(b2b_tnxs == 1) -> (idle_cycles == 0);}

@@ -20,7 +20,7 @@ class apb_dpmem_driver extends uvm_driver #(apb_dpmem_transaction);
   //////////////////////////////////////////////////////////////////////////////
   // Declaration of Virtual interface 
   //////////////////////////////////////////////////////////////////////////////
-  virtual apb_if vif;
+  virtual apb_if.driver_dv vif;
 
   ///////////////////////////////////////////////////////////////////////////////
   // Declaration of Analysis ports and exports 
@@ -133,7 +133,7 @@ class apb_dpmem_driver extends uvm_driver #(apb_dpmem_transaction);
   /*
   Declaration : uvm_config_db#(int)::set(this, "*", "A")
   Discription : All of the functions in uvm_config_db#(T) are static,
-               so they must be called using the :: operator.  For example:
+               so they must be called using the :: operator.
   */
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);

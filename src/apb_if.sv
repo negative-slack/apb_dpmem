@@ -53,10 +53,10 @@ interface apb_if
       output PREADY, PRDATA, PSLVERR
   );
 
-  modport mst_mp(
-      output PSEL, PADDR, PWRITE, PWDATA, PSTRB, PENABLE,
-      input PCLK, PRESETn, PREADY, PRDATA, PSLVERR
-  );
+  // modport mst_mp(
+  //     output PSEL, PADDR, PWRITE, PWDATA, PSTRB, PENABLE,
+  //     input PCLK, PRESETn, PREADY, PRDATA, PSLVERR
+  // );
 
   /**************************************************
   / USED FOR VERIFICATION

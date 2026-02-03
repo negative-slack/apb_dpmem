@@ -1,0 +1,27 @@
+Signal Name,Description,Coverage Type,Check Type,"Property Name && 
+Covergroup/Coverpoints names",Column 6
+APB Protocol Specific,,,,,FALSE
+PRESETn,PRESETn must always be in a known state (aka: valid; either 0 or 1),Assertion,Signal Valid,SIGNAL_VALID,TRUE
+PSEL,PSEL must always in a known state (aka: valid; either 0 or 1),Assertion,Signal Valid,SIGNAL_VALID,TRUE
+PENABLE,"PENABLE must always be in a known state (valid; either 0 or 1) when PSEL is asserted in the same clock cycle
+(more specifically; PENABLE = 0 indicates the begginig of the transaction & 
+after one clock cycle PENABLE = 1 indicates the 2nd/subsequent cycle in the transaction)",Assertion,Signal Valid,TRANSACTION_CONTROL_SIGNAL_VALID,TRUE
+PADDR,PADDR is in a known state (valid) when PSEL is active (control signal),Assertion,Signal Valid,TRANSACTION_CONTROL_SIGNAL_VALID,TRUE
+PWRITE,PWRITE is in a known state (valid) when PSEL is active (control signal),Assertion,Signal Valid,TRANSACTION_CONTROL_SIGNAL_VALID,TRUE
+PWDATA,"If PSEL signal is at a logic 1 and PWRITE is at logic 1, then PWDATA must be valid",Assertion,Signal Valid,WRITE_CONTROL_PSTRB_SIGNAL_VALID,TRUE
+PSTRB,"If PSEL signal is at a logic 1 and PWRITE is at logic 1, then PSTRB must be valid",Assertion,Signal Valid,WRITE_CONTROL_PSTRB_SIGNAL_VALID,TRUE
+PREADY,If PENABLE is active then PREADY is in a known state (valid),Assertion,Signal Valid,SLV_OUTPUT_SIGNAL_VALID,TRUE
+PSLVERR,If PENABLE is active then PSLVERR is in a known state (valid),Assertion,Signal Valid,SLV_OUTPUT_SIGNAL_VALID,TRUE
+PRDATA,"If PENABLE is at logic 1 && PWRITE is at logic 0 && PREADY is at logic 1,
+then PRDATA is valid",Assertion,Signal Valid,PRDATA_SIGNAL_VALID,TRUE
+PREADY_1_|=>_PENABLE_0,PENABLE is de-asserted once PREADY becomes active,Assertion,Timing Relations,PREADY_1_PENABLE_0,TRUE
+PSEL_1_|=>_PENABLE_1,There is only one clock delay between PSEL and PENABLE,Assertion,Timing Relations,PSEL_1_PENABLE_1,TRUE
+SIGNAL STABILITY,"When PSEL becomes active, the PADDR, PWRITE, PWDATA, PSTRB ",Assertion,Timing Relations,PSEL_ASSERT_SIGNAL_STABLE,FALSE
+Functional Coverage (Dual Port Memory Slave Specific),,,,,FALSE
+PRESETn,Cover how many times PRESETn was equal to 1 & 0 over the transactions generated,Coverage,covergroup,apb_dpmem_cg.presetn_cp,TRUE
+PADDR,Cover how many address was hit over 1000 transaction,Coverage,covergroup,apb_dpmem_cg.paddr_cp,TRUE
+PWRITE,Cover how many times PWRITE was equal to 1 & 0 over the transactions generated,Coverage,covergroup,apb_dpmem_cg.write_cp,TRUE
+PSTRB,"Cover how many times PSTRB # of bits was equal to 0, 1, 2, 3 over the transactions generated",Coverage,covergroup,apb_dpmem_cg.pstrb_cp,TRUE
+PSLVERR,Cover how many times PSLVERR was equal to 1 & 0 over the transactions generated,Coverage,covergroup,apb_dpmem_cg.pslverr_cp,TRUE
+PWRTIE cross PADDR,Cross Coverage PWRITE and PADDR,Coverage,covergroup,apb_dpmem_cg.cross_paddr_pwrite,TRUE
+PWRTIE cross PSTRB,Cross Coverage PWRITE and PSTRB,Coverage,covergroup,apb_dpmem_cg.cross_pwrite_pstrb_cp,TRUE

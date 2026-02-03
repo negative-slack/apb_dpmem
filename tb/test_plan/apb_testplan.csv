@@ -1,5 +1,5 @@
 Signal Name,Description,Coverage Type,Check Type,"Property Name && 
-Covergroup/Coverpoints names",Column 6
+Covergroup/Coverpoints names",PASS/FAIL
 APB Protocol Specific,,,,,FALSE
 PRESETn,PRESETn must always be in a known state (aka: valid; either 0 or 1),Assertion,Signal Valid,SIGNAL_VALID,TRUE
 PSEL,PSEL must always in a known state (aka: valid; either 0 or 1),Assertion,Signal Valid,SIGNAL_VALID,TRUE

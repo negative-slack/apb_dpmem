@@ -27,7 +27,9 @@ module apb_assertions (
     apb_if.sva_mp assert_intf
 );
 
-  // property to check that the (PRESETn, PSEL) signals are always in a known state
+  /*************************************************************************
+   property to check that the (PRESETn, PSEL) signals are always in a known state
+  *************************************************************************/
   property SIGNAL_VALID(logic signal);
     @(posedge assert_intf.PCLK) !$isunknown(
         signal
@@ -48,8 +50,11 @@ module apb_assertions (
   else $error("ASSERT ERROR: Signal PSEL is INVALID @ time=%0t", $time);
   /*************************************************************************/
 
-  // property to check that if a PSEL is active, then
-  // the CONTROL signals (PENABLE, PADDR, PWRITE) is always in a known state
+
+  /*************************************************************************
+  property to check that if a PSEL is active, then
+  the TNX CONTROL signals (PENABLE, PADDR, PWRITE) is always in a known state
+  *************************************************************************/
   property TRANSACTION_CONTROL_SIGNAL_VALID(logic signal);
     @(posedge assert_intf.PCLK) $onehot(
         assert_intf.PSEL
@@ -61,21 +66,28 @@ module apb_assertions (
   // PENABLE  is valid when PSEL is active
   PENABLE_VALID :
   assert property (TRANSACTION_CONTROL_SIGNAL_VALID(assert_intf.PENABLE))
-  else $error("ASSERT ERROR: Signal PENABLE is INVALID when Signal PSEL is Asserted @ time=%0t", $time);
+  else
+    $error(
+        "ASSERT ERROR: Signal PENABLE is INVALID when Signal PSEL is Asserted @ time=%0t", $time
+    );
 
   // PADDR is valid when PSEL is active
   PADDR_VALID :
   assert property (TRANSACTION_CONTROL_SIGNAL_VALID(assert_intf.PADDR))
-  else $error("ASSERT ERROR: Signal PADDR is INVALID when Signal PSEL is Asserted @ time=%0t", $time);
+  else
+    $error("ASSERT ERROR: Signal PADDR is INVALID when Signal PSEL is Asserted @ time=%0t", $time);
 
   // PWRITE  is valid when PSEL is active
   PWRITE_VALID :
   assert property (TRANSACTION_CONTROL_SIGNAL_VALID(assert_intf.PWRITE))
-  else $error("ASSERT ERROR: Signal PWRITE is INVALID when Signal PSEL is Asserted @ time=%0t", $time);
+  else
+    $error("ASSERT ERROR: Signal PWRITE is INVALID when Signal PSEL is Asserted @ time=%0t", $time);
   /*************************************************************************/
 
+  /*************************************************************************
   // property to check that write control signals (PSTRB, PWDATA) are 
   // in a known state if a pwrite is asserted
+  *************************************************************************/
   property WRITE_CONTROL_PSTRB_SIGNAL_VALID(signal);
     @(posedge assert_intf.PCLK) ($onehot(
         assert_intf.PSEL
@@ -89,7 +101,8 @@ module apb_assertions (
   assert property (WRITE_CONTROL_PSTRB_SIGNAL_VALID(assert_intf.PWDATA))
   else
     $error(
-        "ASSERT ERROR: Signal PWDATA is INVALID when Signal PSEL and PWRITE are Asserted @ time=%0t", $time
+        "ASSERT ERROR: Signal PWDATA is INVALID when Signal PSEL and PWRITE are Asserted @ time=%0t",
+        $time
     );
 
   // PSTRB  is valid when PWRITE is active
@@ -97,11 +110,12 @@ module apb_assertions (
   assert property (WRITE_CONTROL_PSTRB_SIGNAL_VALID(assert_intf.PSTRB))
   else
     $error(
-        "ASSERT ERROR: Signal PSTRB is INVALID when Signal PSEL and PWRITE are Asserted @ time=%0t", $time
+        "ASSERT ERROR: Signal PSTRB is INVALID when Signal PSEL and PWRITE are Asserted @ time=%0t",
+        $time
     );
   /*************************************************************************/
-
   // Check that if PENABLE is active, then the signals (PREADY, PSLVERR) are in a known state
+  /*************************************************************************/
   property SLV_OUTPUT_SIGNAL_VALID(signal);
     @(posedge assert_intf.PCLK) $rose(
         assert_intf.PENABLE
@@ -114,11 +128,17 @@ module apb_assertions (
 
   PREADY_VALID :
   assert property (SLV_OUTPUT_SIGNAL_VALID(assert_intf.PREADY))
-  else $error("ASSERT ERROR: Signal PREADY is INVALID when Signal PENABLE is Asserted @ time=%0t", $time);
+  else
+    $error(
+        "ASSERT ERROR: Signal PREADY is INVALID when Signal PENABLE is Asserted @ time=%0t", $time
+    );
 
   PSLVERR_VALID :
   assert property (SLV_OUTPUT_SIGNAL_VALID(assert_intf.PSLVERR))
-  else $error("ASSERT ERROR: Signal PSLVERR is INVALID when Signal PENABLE is Asserted @ time=%0t", $time);
+  else
+    $error(
+        "ASSERT ERROR: Signal PSLVERR is INVALID when Signal PENABLE is Asserted @ time=%0t", $time
+    );
   /*************************************************************************/
 
   // Check that read data is in a known state if a read transaction
@@ -147,7 +167,8 @@ module apb_assertions (
   assert property (PREADY_1_PENABLE_0)
   else
     $error(
-        "ASSERT ERROR: PENABLE FAILED TO DEASSERT EXACTLY 1 CC AFTER PREADY IS ASSERTED @ time=%0t", $time
+        "ASSERT ERROR: PENABLE FAILED TO DEASSERT EXACTLY 1 CC AFTER PREADY IS ASSERTED @ time=%0t",
+        $time
     );
 
   property PSEL_1_PENABLE_1;
@@ -158,7 +179,10 @@ module apb_assertions (
 
   assert property (PSEL_1_PENABLE_1)
   else
-    $error("ASSERT ERROR: PENABLE FAILED TO ASSERT EXACTLY 1 CC AFTER PSEL IS ASSERTED @ time=%0t", $time);
+    $error(
+        "ASSERT ERROR: PENABLE FAILED TO ASSERT EXACTLY 1 CC AFTER PSEL IS ASSERTED @ time=%0t",
+        $time
+    );
 
   // property PSEL_ASSERT_SIGNAL_STABLE(signal);
   //   @(posedge assert_intf.PCLK) ($onehot(

@@ -105,7 +105,7 @@ class apb_dpmem_driver extends uvm_driver #(apb_dpmem_transaction);
     end
   endtask : drive_tnxs_w_idle
 
-  // deassert presetn for 1 clock cycles !
+  // deassert presetn for 1 clock cycle only !
   task resetn();
     idle_state();
     cycle();

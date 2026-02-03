@@ -67,7 +67,7 @@ class apb_dpmem_ref_model extends uvm_component;
   ////////////////////////////////////////////////////////////////////////////
   task get_expected_transaction(apb_dpmem_transaction rm_trans);
     exp_trans = rm_trans;  // equal the expected with the actual tnx
-    if (exp_trans.presetn) begin
+    if (exp_trans.presetn) begin // I only care about when PRESETn is high @ 1!
       if (exp_trans.pwrite) begin
         // TRYING TO WRITE TO A READ ONLY ADDRESS -> rasie the pslverr signal 
         if (exp_trans.paddr >= 10'h0 && exp_trans.paddr <= 10'hf) begin

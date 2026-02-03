@@ -1,1 +1,0 @@
-"top" -s "top" -cc_type "sbct" -timescale "1ns/10ps" 

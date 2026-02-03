@@ -1,9 +1,9 @@
 `ifndef APB_DPMEM_TEST__SV
 `define APB_DPMEM_TEST__SV 
 
-class apb_dpmem_test extends uvm_test;
+import apb_dpmem_pkg::*;
 
-  import apb_dpmem_pkg::*;
+class apb_dpmem_test extends uvm_test;
 
   //////////////////////////////////////////////////////////////////////////////
   // Declaration of component utils to register with factory 

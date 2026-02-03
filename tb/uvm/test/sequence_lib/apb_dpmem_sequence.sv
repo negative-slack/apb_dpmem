@@ -1,6 +1,3 @@
-`ifndef APB_DPMEM_SEQUENCE__SV
-`define APB_DPMEM_SEQUENCE__SV 
-
 /* The uvm_sequence class provides the interfaces necessary in order to
  create streams of sequence items and/or other sequences.
  
@@ -28,6 +25,9 @@
               |
               apb_dpmem_sequence         
 */
+
+`ifndef APB_DPMEM_SEQUENCE__SV
+`define APB_DPMEM_SEQUENCE__SV 
 
 class apb_dpmem_sequence extends uvm_sequence #(apb_dpmem_transaction);
 

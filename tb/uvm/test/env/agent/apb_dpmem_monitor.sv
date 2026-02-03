@@ -53,19 +53,19 @@ class apb_dpmem_monitor extends uvm_monitor;
   ///////////////////////////////////////////////////////////////////////////////
   task collect_trans();
 
-      @(`MON);
-
+    @(`MON);
+    if (`MON.PRESETn)
       if (`MON.PSEL && `MON.PENABLE && `MON.PREADY) begin
 
         act_trans.presetn = `MON.PRESETn;
 
-        act_trans.paddr = `MON.PADDR;
-        act_trans.pwrite = `MON.PWRITE;
-        act_trans.pwdata = `MON.PWDATA;
-        act_trans.pstrb = `MON.PSTRB;
+        act_trans.paddr   = `MON.PADDR;
+        act_trans.pwrite  = `MON.PWRITE;
+        act_trans.pwdata  = `MON.PWDATA;
+        act_trans.pstrb   = `MON.PSTRB;
 
-        act_trans.pready = `MON.PREADY;
-        act_trans.prdata = `MON.PRDATA;
+        act_trans.pready  = `MON.PREADY;
+        act_trans.prdata  = `MON.PRDATA;
         act_trans.pslverr = `MON.PSLVERR;
 
         `uvm_info(get_full_name(), $sformatf("TRANSACTION FROM MONITOR"), UVM_LOW);

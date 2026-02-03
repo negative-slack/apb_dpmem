@@ -65,7 +65,7 @@ class apb_dpmem_scoreboard extends uvm_scoreboard;
   //               and the actual tnxs coming from the monitor
   ///////////////////////////////////////////////////////////////////////////////
   task compare_tnxs();
-    apb_dpmem_transaction exp_trans, act_trans;
+    // apb_dpmem_transaction exp_trans, act_trans;
     if (exp_trans_fifo.size != 0) begin
       exp_trans = exp_trans_fifo.pop_front();
       if (act_trans_fifo.size != 0) begin
@@ -82,26 +82,29 @@ class apb_dpmem_scoreboard extends uvm_scoreboard;
             "EXPECTED PSLVERR =%0h , ACTUAL PSLVERR =%0h ", exp_trans.pslverr, act_trans.pslverr),
             UVM_LOW);
 
-        if (exp_trans.prdata == act_trans.prdata) begin
-          `uvm_info(get_full_name(), $sformatf("PRDATA MATCHES"), UVM_LOW);
-        end else begin
-          `uvm_error(get_full_name(), $sformatf("PRDATA MIS-MATCHES"));
-          error = 1;
-        end
+        if (exp_trans.presetn)
+          if (exp_trans.prdata == act_trans.prdata) begin
+            `uvm_info(get_full_name(), $sformatf("PRDATA MATCHES"), UVM_LOW);
+          end else begin
+            `uvm_error(get_full_name(), $sformatf("PRDATA MIS-MATCHES"));
+            error = 1;
+          end
 
-        if (exp_trans.pready == act_trans.pready) begin
-          `uvm_info(get_full_name(), $sformatf("PREADY MATCHES"), UVM_LOW);
-        end else begin
-          `uvm_error(get_full_name(), $sformatf("PREADY MIS-MATCHES"));
-          error = 1;
-        end
+        if (exp_trans.presetn)
+          if (exp_trans.pready == act_trans.pready) begin
+            `uvm_info(get_full_name(), $sformatf("PREADY MATCHES"), UVM_LOW);
+          end else begin
+            `uvm_error(get_full_name(), $sformatf("PREADY MIS-MATCHES"));
+            error = 1;
+          end
 
-        if (exp_trans.pslverr == act_trans.pslverr) begin
-          `uvm_info(get_full_name(), $sformatf("PSLVERR MATCHES"), UVM_LOW);
-        end else begin
-          `uvm_error(get_full_name(), $sformatf("PSLVERR MIS-MATCHES"));
-          error = 1;
-        end
+        if (exp_trans.presetn)
+          if (exp_trans.pslverr == act_trans.pslverr) begin
+            `uvm_info(get_full_name(), $sformatf("PSLVERR MATCHES"), UVM_LOW);
+          end else begin
+            `uvm_error(get_full_name(), $sformatf("PSLVERR MIS-MATCHES"));
+            error = 1;
+          end
 
       end
     end

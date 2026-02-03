@@ -33,19 +33,21 @@ interface apb_if
   // mst output signals : (a master example is an AHB2APB bridge)
   // below are the control signals of a single transaction
   logic PSEL;  // slave select, when asserted indicates the start of the transaction
-  logic PENABLE;  // low indicates the first cycle of the transaction, and must be 1 in the following cycle > which indicates the 2nd/subsequent cycle of the apb protocol
+  logic PENABLE;  // low indicates the first cycle of the transaction (setup state), and must be 1 in the following cycle > which indicates the 2nd/subsequent cycle (access state) of the apb protocol
   addr_t PADDR;  // address to write to or read from
   logic PWRITE;  // 0: read, 1: write
-  // below signals are only valid when PWRITE is asserted for a write transaction
+  // below signals have a value other than '0, only when PWRITE is asserted for a write transaction (will be controlled via a constraint)
   data_t PWDATA;  // write data value
   strb_t PSTRB;  // write strobe; indicates which byte lane to update during a write transaction (16 diff choice)
 
   // slv output signals
-  logic PREADY;
+  logic PREADY; // only when PREADY is high it indicates the end of the tnx, read data is avaialbe at the same clock cycle with 0 delay. For a write tnxs, we update the memory after 1 delay cycle! (When PREADY = 0)
   data_t PRDATA;
   logic PSLVERR;
 
-  // use for synthesis
+  /**************************************************
+  / USE FOR SYNTHESIS
+  **************************************************/
   modport slv_mp(
       input PCLK, PRESETn, PSEL, PADDR, PWRITE, PWDATA, PSTRB, PENABLE,
       output PREADY, PRDATA, PSLVERR
@@ -56,7 +58,9 @@ interface apb_if
       input PCLK, PRESETn, PREADY, PRDATA, PSLVERR
   );
 
-  //use for verification
+  /**************************************************
+  / USED FOR VERIFICATION
+  **************************************************/
   clocking driver_cb @(posedge PCLK);
     default input #1step output #1ns;
     input PREADY, PRDATA, PSLVERR;
@@ -71,7 +75,7 @@ interface apb_if
   modport driver_dv(clocking driver_cb);
   modport monitor_dv(clocking monitor_cb);
 
-  // use for assertions (bind in the top class)
+  // use for APB PROTOCOL assertions (will bind in the top class)
   modport sva_mp(
       input PCLK, PRESETn, PSEL, PADDR, PWRITE, PWDATA, PSTRB, PENABLE, PREADY, PRDATA, PSLVERR
   );

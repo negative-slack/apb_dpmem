@@ -1,7 +1,4 @@
-`ifndef APB_DPMEM_TRANSACTION__SV
-`define APB_DPMEM_TRANSACTION__SV 
-
-/* The uvm_sequence_item class provides the basic functionality for objects,
+/* The uvm_sequence_item class (aka; *_transaction) provides the basic functionality for objects,
   both sequence items and sequences, to operate in the sequence mechanism.
   
   Class Hierarchy
@@ -14,6 +11,10 @@
 
 // Because of this WARNING below I decalred the input outside the class ! 
 // WARNING: [VRFC 10-9281] package import cannot be inside a class
+
+`ifndef APB_DPMEM_TRANSACTION__SV
+`define APB_DPMEM_TRANSACTION__SV 
+
 import apb_dpmem_pkg::*;
 
 class apb_dpmem_transaction extends uvm_sequence_item;
@@ -43,18 +44,18 @@ class apb_dpmem_transaction extends uvm_sequence_item;
   //////////////////////////////////////////////////////////////////////////////
   `uvm_object_utils_begin(apb_dpmem_transaction)
 
-    `uvm_field_int(presetn, UVM_ALL_ON)
-    `uvm_field_int(paddr, UVM_ALL_ON)
-    `uvm_field_int(pwrite, UVM_ALL_ON)
-    `uvm_field_int(pwdata, UVM_ALL_ON)
-    `uvm_field_int(pstrb, UVM_ALL_ON)
+  `uvm_field_int(presetn, UVM_ALL_ON)
+  `uvm_field_int(paddr, UVM_ALL_ON)
+  `uvm_field_int(pwrite, UVM_ALL_ON)
+  `uvm_field_int(pwdata, UVM_ALL_ON)
+  `uvm_field_int(pstrb, UVM_ALL_ON)
 
-    `uvm_field_int(b2b_tnxs, UVM_ALL_ON)
-    `uvm_field_int(idle_cycles, UVM_ALL_ON)
+  `uvm_field_int(b2b_tnxs, UVM_ALL_ON)
+  `uvm_field_int(idle_cycles, UVM_ALL_ON)
 
-    `uvm_field_int(pready, UVM_ALL_ON)
-    `uvm_field_int(prdata, UVM_ALL_ON)
-    `uvm_field_int(pslverr, UVM_ALL_ON)
+  `uvm_field_int(pready, UVM_ALL_ON)
+  `uvm_field_int(prdata, UVM_ALL_ON)
+  `uvm_field_int(pslverr, UVM_ALL_ON)
 
   `uvm_object_utils_end
 

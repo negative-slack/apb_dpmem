@@ -43,7 +43,6 @@
 │       │   │   run.tcl
 │       │   │   top.sv
 │       │   │   xsim.log
-│       │   
 │       │
 │       └───test
 │           ├───env

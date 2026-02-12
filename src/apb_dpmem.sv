@@ -45,13 +45,13 @@ module apb_dpmem
   logic [1:0] read_cnt;
   logic [1:0] write_cnt;
   // this generate blk only needed to dump sampled MEM as tmp regs to view them in the surfur/gtkwave waveforms 
-  generate
-    genvar idx;
-    for (idx = 0; idx < `MEM_DEPTH; idx = idx + 1) begin
-      data_t tmp;
-      assign tmp = MEM[idx];
-    end
-  endgenerate
+//  generate
+//    genvar idx;
+//    for (idx = 0; idx < `MEM_DEPTH; idx = idx + 1) begin
+//      data_t tmp;
+//      assign tmp = MEM[idx];
+//    end
+//  endgenerate
 
   // present_state
   always_ff @(posedge apb_slave.PCLK or negedge apb_slave.PRESETn) begin

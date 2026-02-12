@@ -33,3 +33,4 @@ doc/*.fls
 doc/*.log
 doc/*.synctex.gz
 doc/*.toc
+doc/*.out

@@ -1,3 +1,5 @@
+# Directory Structure
+
 ``` bash 
 │   .gitignore
 │   LICENSE
